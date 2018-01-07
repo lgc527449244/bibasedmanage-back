@@ -15,8 +15,6 @@ public class BmOperation {
 
     private String remark;
 
-    private String operationGroupId2;
-
     public String getId() {
         return id;
     }
@@ -71,13 +69,5 @@ public class BmOperation {
 
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
-    }
-
-    public String getOperationGroupId2() {
-        return operationGroupId2;
-    }
-
-    public void setOperationGroupId2(String operationGroupId2) {
-        this.operationGroupId2 = operationGroupId2 == null ? null : operationGroupId2.trim();
     }
 }
