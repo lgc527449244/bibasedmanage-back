@@ -3,12 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <script type="text/javascript" src="../static/js/jquery.min.js"></script>
+    #parse("/common/include.html")
 </head>
 <body>
-    111
-<script>
-    alert($);
-</script>
+    <input type="file" name="file" lay-type="file" lay-ext="xls" lay-title="请上传表格"
+           class="layui-upload-file">
+    <script>
+        layui.use('upload', function(){
+            layui.upload({
+                url:Bm["path"] + '/test/file'
+                ,before: function(input){
+
+                }
+                ,success: function(res){
+                    console.log(res); //上传成功返回值，必须为json格式
+                }
+            });
+        });
+    </script>
 </body>
 </html>

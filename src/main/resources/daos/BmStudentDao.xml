@@ -21,11 +21,12 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="record_status" jdbcType="VARCHAR" property="recordStatus" />
     <result column="comment_teacher" jdbcType="VARCHAR" property="commentTeacher" />
+    <result column="data_sources" jdbcType="VARCHAR" property="dataSources" />
   </resultMap>
   <sql id="Base_Column_List">
     id, topic_id, teacher_group_id, student_id, grade, college, major, classes, name, 
     sex, email, mobile, answer_evaluate, answer_score, status, create_time, update_time, 
-    record_status, comment_teacher
+    record_status, comment_teacher, data_sources
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -44,14 +45,14 @@
       sex, email, mobile, 
       answer_evaluate, answer_score, status, 
       create_time, update_time, record_status, 
-      comment_teacher)
+      comment_teacher, data_sources)
     values (#{id,jdbcType=VARCHAR}, #{topicId,jdbcType=VARCHAR}, #{teacherGroupId,jdbcType=VARCHAR}, 
       #{studentId,jdbcType=VARCHAR}, #{grade,jdbcType=INTEGER}, #{college,jdbcType=VARCHAR}, 
       #{major,jdbcType=VARCHAR}, #{classes,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
       #{sex,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
       #{answerEvaluate,jdbcType=VARCHAR}, #{answerScore,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{recordStatus,jdbcType=VARCHAR}, 
-      #{commentTeacher,jdbcType=VARCHAR})
+      #{commentTeacher,jdbcType=VARCHAR}, #{dataSources})
   </insert>
   <insert id="insertSelective" parameterType="com.jmu.bibasedmanage.pojo.BmStudent">
     insert into bm_student
@@ -113,6 +114,9 @@
       <if test="commentTeacher != null">
         comment_teacher,
       </if>
+      <if test="dataSources != null">
+        data_sources,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -171,6 +175,9 @@
       </if>
       <if test="commentTeacher != null">
         #{commentTeacher,jdbcType=VARCHAR},
+      </if>
+      <if test="dataSources != null">
+        #{dataSources,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -231,6 +238,9 @@
       <if test="commentTeacher != null">
         comment_teacher = #{commentTeacher,jdbcType=VARCHAR},
       </if>
+      <if test="dataSources != null">
+        data_sources = #{dataSources,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -253,17 +263,24 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       record_status = #{recordStatus,jdbcType=VARCHAR},
-      comment_teacher = #{commentTeacher,jdbcType=VARCHAR}
+      comment_teacher = #{commentTeacher,jdbcType=VARCHAR},
+      data_sources = #{dataSources}
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <select id="selectByPage" resultMap="BaseResultMap" parameterType="java.util.Map">
     select
     <include refid="Base_Column_List" />
     from bm_student
-    where 1=1
+    where record_status != "DELETED"
     <if test="keyword != null and keyword != ''">
       and student_id like concat("%", #{keyword}, "%")
     </if>
     order by create_time desc
+  </select>
+  <select id="selectByStudentId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from bm_student
+    where record_status="NORMAL" and student_id=#{studentId}
   </select>
 </mapper>

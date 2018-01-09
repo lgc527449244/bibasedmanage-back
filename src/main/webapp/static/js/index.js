@@ -58,21 +58,27 @@ layui.config({
         });
     }).resize();
 
-    //设置navbar
-    navbar.set({
-        spreadOne: true,
-        elem: '#admin-navbar-side',
-        cached: true,
-        // data: navs
-		cached:true,
-		url: Bm['path'] + '/static/datas/nav.json'
+    $.post(Bm["path"] + '/menu',{},function (ret) {
+        var _navs = ret.result;
+
+        //设置navbar
+        navbar.set({
+            spreadOne: true,
+            elem: '#admin-navbar-side',
+            cached: true,
+            data: _navs,
+            cached:true,
+            // url: Bm['path'] + '/static/datas/nav.json'
+        });
+        //渲染navbar
+        navbar.render();
+        //监听点击事件
+        navbar.on('click(side)', function (data) {
+            tab.tabAdd(data.field);
+        });
     });
-    //渲染navbar
-    navbar.render();
-    //监听点击事件
-    navbar.on('click(side)', function (data) {
-        tab.tabAdd(data.field);
-    });
+
+
     //清除缓存
     $('#clearCached').on('click', function () {
         navbar.cleanCached();
@@ -155,6 +161,15 @@ layui.config({
     shadeMobile.on('click', function () {
         $('body').removeClass('site-mobile');
     });
+
+    $("#editPwd").on('click', function () {
+       var _data = {
+           "title": "修改密码",
+           "icon": "fa-table",
+           "href": "edit-pwd.html"
+       };
+        tab.tabAdd(_data);
+    });
 });
 
 var isShowLock = false;
@@ -198,41 +213,33 @@ function lock($, layer) {
 
             //绑定解锁按钮的点击事件
             layero.find('button#unlock').on('click', function () {
-                var $lockBox = $('div#lock-box');
 
-                var userName = $lockBox.find('input[name=username]').val();
-                var pwd = $lockBox.find('input[name=password]').val();
-                if (pwd === '输入密码解锁..' || pwd.length === 0) {
+                var lockPwd = $("#lockPwd").val();
+                if (lockPwd == null || lockPwd.length == 0) {
                     layer.msg('请输入密码..', {
                         icon: 2,
                         time: 1000
                     });
                     return;
                 }
-                unlock(userName, pwd);
+                unlock(lockPwd);
             });
 			/**
 			 * 解锁操作方法
-			 * @param {String} 用户名
 			 * @param {String} 密码
 			 */
-            var unlock = function (un, pwd) {
-                console.log(un, pwd);
+            var unlock = function (pwd) {
+                // console.log(pwd);
                 //这里可以使用ajax方法解锁
-                $.post('/Account/UnLock', { userName: un, password: pwd }, function (res) {
-                    //验证成功
-                    if (res.rel) {
+                $.post(Bm['path'] + '/unlock', { lockPwd : pwd }, function (res) {
+                    if (res.status == "SUCCESS") {//验证成功
                         //关闭锁屏层
                         layer.close(lockIndex);
                         isShowLock = false;
                     } else {
-                        layer.msg(res.msg, { icon: 2, time: 1000 });
+                        layer.msg(res.result, { icon: 2, time: 1000 });
                     }
                 }, 'json');
-                //isShowLock = false;
-                //演示：默认输入密码都算成功
-                //关闭锁屏层
-                //layer.close(lockIndex);
             };
         }
     });

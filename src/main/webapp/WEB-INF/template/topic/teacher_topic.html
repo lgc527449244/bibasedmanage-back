@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>课题信息管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    #parse("/common/include.html")
+    <link rel="stylesheet" href="${base}/static/css/table.css" />
+    <script type="text/javascript" src="${base}/static/pages/topic/teacher_topic.js"></script>
+</head>
+
+<body>
+<div class="admin-main">
+
+   <blockquote class="layui-elem-quote">
+        <div class="layui-inline">
+            <form class="layui-form" action="" style="height: 10px">
+                <div class="layui-form-item" style="margin:0;">
+                    <label class="layui-form-label">关键词：</label>
+                    <div class="layui-input-inline">
+                            <input type="hidden" id="tId" name="tId" value="1"></input>
+                        <input type="text" name="keyword" placeholder="输入关键词" autocomplete="off" class="layui-input"/>
+                    </div>
+                    <div class="layui-form-mid layui-word-aux" style="padding:0;">
+                        <button lay-filter="search" class="layui-btn" lay-submit><i class="fa fa-search" aria-hidden="true"></i> 查询</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </blockquote>
+    <fieldset class="layui-elem-field">
+        <legend>数据列表</legend>
+        <div class="layui-field-box layui-form">
+    
+            <table class="layui-table admin-table">
+                <thead>
+                <tr>
+            <!--        <th style="width: 30px;"><input type="checkbox" lay-filter="allselector" lay-skin="primary"></th>  -->
+                    <th>题目</th>
+                    <th>内容</th>
+                    <th>要求</th>
+                    <th>负责老师</th>
+                    <th>人数限制</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="content">
+                </tbody>
+            </table>
+        </div>
+    </fieldset>
+    <div class="admin-table-page">
+        <div id="paged" class="page">
+        </div>
+    </div>
+</div>
+<!--模板-->
+<script type="text/html" id="tpl">
+    {{# layui.each(d.result.result, function(index, item){ }}
+    <tr>
+        <td>{{ item.name||'' }}</td>
+        <td>{{ item.content||'' }}</td>
+        <td>{{ item.required||'' }}</td>
+        <td>{{ item.bmTeacher.name||'' }}</td>
+        <td>{{ item.studentNum||'' }}</td>
+        <td data-sid="{{ item.id }}">
+            {{# if(item.status != null){ }}
+                {{ item.status == "ENABLE" ? "启用" : "停用" }}
+            {{# } }}
+        </td>
+         <td id="option">
+            <a href="javascript:;"  data-id="{{ item.id }}" data-opt="edit" class="layui-btn layui-btn-mini">编辑</a>
+            <a href="javascript:;" data-id="{{ item.id }}" data-opt="del" class="layui-btn layui-btn-danger layui-btn-mini">删除</a>
+        </td>
+    </tr>
+    {{# }); }}
+</script>
+
+</body>
+
+</html>

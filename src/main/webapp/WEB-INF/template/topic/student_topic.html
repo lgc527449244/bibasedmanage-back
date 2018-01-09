@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>选择课题信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    #parse("/common/include.html")
+    <link rel="stylesheet" href="${base}/static/css/table.css" />
+</head>
+
+<body>
+<div class="admin-main">
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+    <ul class="layui-tab-title">
+        <li ><a href="${base}/topic/list-topic.html">课题信息列表</a></li>
+        <li class="layui-this">个人课题信息</li>
+    </ul>
+    <div class="layui-tab-content"></div>
+</div>
+    <fieldset class="layui-elem-field">
+        <legend>数据列表</legend>
+        <div class="layui-field-box layui-form">
+            <input type="hidden" id="studentId" name="studentId" value="1"></input>
+            <table class="layui-table admin-table">
+                <thead>
+                <tr>
+            <!--        <th style="width: 30px;"><input type="checkbox" lay-filter="allselector" lay-skin="primary"></th>  -->
+                    <th>题目</th>
+                    <th>内容</th>
+                    <th>要求</th>
+                    <th>负责老师</th>
+                    <th>人数限制</th>
+                    <th>当前人数</th>
+                    <th>操作</th>
+                </tr>
+                <tbody id="content">
+                #if(${bmTopic}) 
+                <tr>
+                   <td>$bmTopic.name</td>
+                   <td>$bmTopic.content</td>
+                   <td>$bmTopic.required</td>
+                   <td>$bmTopic.bmTeacher.name</td>
+                   <td>$bmTopic.studentNum</td>
+                   <td id="currenNum">$bmTopic.studentNowNum</td>
+                   <td >
+                   <a id="option" href="javascript:;" data-id="$bmTopic.id" data-num="$bmTopic.studentNowNum" data-opt="isChoose" class="layui-btn layui-btn-warm layui-btn-mini">
+                                                      取消
+                  </a>
+        </td>
+    </tr>
+      #end
+          
+     
+      </tbody>
+            </table>
+        </div>
+    </fieldset>
+</div>
+
+</body>
+<script>
+    var disabled="true";
+  
+    layui.use(['jquery'], function() {
+        $= layui.jquery;
+        var student_id = $("#studentId").val();
+         $("#option").on('click', function() {
+             alert("hha"+$("#option").text().trim());
+                var currenNum =$("#currenNum").text();
+                alert(currenNum);
+            	if(disabled=="true"){
+            		disabled="false";
+            	 if( $("#option").text().trim()=="选择"){
+            		 $.post(Bm["path"] + "/topic/choose-topic", {id:$(this).data('id'),studentId:student_id,choose:"Y"},function(ret){
+                         if(ret.status == "SUCCESS"){
+                        	 currenNum=Number(currenNum)+1;
+                        	 $("#currenNum").text(currenNum);
+                        	 $("#option").text("取消");
+                        	 disabled="true";
+                         }
+                         else{
+                        	 alert("你已经选过课题了！请先取消课题");
+                         }
+            		 });
+            		// window.location.href = Bm["path"] + "/?id=" + $(this).data('id')+"&status=DISENABLE";
+            	 }
+            	 else if( $("#option").text().trim()=="取消"){
+            		 $.post(Bm["path"] + "/topic/choose-topic", {id:$(this).data('id'),studentId:student_id,choose:"N"},function(ret){
+                         if(ret.status == "SUCCESS"){
+                        	   currenNum=Number(currenNum)-1;
+                              $("#currenNum").text(currenNum);
+                        	  $("#option").text("选择");
+                        	  disabled="true";
+                         }});
+            	 }
+            	 else{
+            		 disabled="true";
+            		  alert("当前人数已达上限!");
+            	 }
+            	}
+         });
+    });
+        </script>
+</html>

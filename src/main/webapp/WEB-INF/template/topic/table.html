@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>课题信息管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    #parse("/common/include.html")
+    <link rel="stylesheet" href="${base}/static/css/table.css" />
+    <script type="text/javascript" src="${base}/static/pages/topic/table.js"></script>
+
+</head>
+
+<body>
+<div class="admin-main">
+
+   <blockquote class="layui-elem-quote">
+        <div class="layui-inline">
+            <form class="layui-form" action="" style="height: 10px">
+                <div class="layui-form-item" style="margin:0;">
+                    <label class="layui-form-label">关键词：</label>
+                    <div class="layui-input-inline">
+                        
+                        <input type="text" name="keyword" placeholder="输入关键词" autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux" style="padding:0;">
+                        <button lay-filter="search" class="layui-btn" lay-submit><i class="fa fa-search" aria-hidden="true"></i> 查询</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+          <div class="layui-inline">
+            <form class="layui-form" action="" style="height: 10px">
+                <input type="hidden" id="userId" name="userId" value="1"></input>
+                
+                       #if(${bmTopictime}) 
+                        #set($flag="update")
+                        #set($start =$!date.format('yyyy-MM-dd HH:mm:ss',$bmTopictime.beginTime))
+                        #set( $end =$!date.format('yyyy-MM-dd HH:mm:ss',$bmTopictime.endTime))
+                       #else
+                        #set($start="")
+                       #set($end = "")
+                       #set($flag = "add")
+                        #end
+                     <input type="hidden" id="flag" name="flag" value="$flag"></input>
+                     <input type="hidden"  name="id" value="$bmTopictime.id"></input>
+                     <div class="layui-form-item" style="margin:0;">
+                    <label class="layui-form-label">开始时间：</label>
+                     <div class="layui-input-inline">
+                    <input type="text" id="beginTime" name="beginTime"  value="$start"  placeholder="输入开始选课时间" autocomplete="off" class="layui-input"></input>
+                    </div>
+                    <label class="layui-form-label">结束时间：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="endTime" name="endTime" value="$end" placeholder="输入结束选课时间" autocomplete="off" class="layui-input"></input>
+                    </div>
+                    <div class="layui-form-mid layui-word-aux" style="padding:0;">
+                        <button lay-filter="apply" class="layui-btn" lay-submit><i class="fa fa-search" aria-hidden="true"></i> 发布</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="layui-inline" style="float: right">
+            <a href="#" class="layui-btn layui-btn-small" id="import" style="float: right">
+                <i class="layui-icon">&#xe608;</i> 导入信息
+            </a>
+        </div>
+    </blockquote>
+    <fieldset class="layui-elem-field">
+        <legend>数据列表</legend>
+        <div class="layui-field-box layui-form">
+            <table class="layui-table admin-table">
+                <thead>
+                <tr>
+            <!--        <th style="width: 30px;"><input type="checkbox" lay-filter="allselector" lay-skin="primary"></th>  -->
+                    <th>题目</th>
+                    <th>内容</th>
+                    <th>要求</th>
+                    <th>负责老师</th>
+                    <th>人数限制</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="content">
+                </tbody>
+            </table>
+        </div>
+    </fieldset>
+    <div class="admin-table-page">
+        <div id="paged" class="page">
+        </div>
+    </div>
+</div>
+
+<!--模板-->
+<script type="text/html" id="tpl">
+    {{# layui.each(d.result.result, function(index, item){ }}
+    <tr>
+        <td>{{ item.name||'' }}</td>
+        <td>{{ item.content||'' }}</td>
+        <td>{{ item.required||'' }}</td>
+        <td>{{ item.bmTeacher.name||'' }}</td>
+        <td>{{ item.studentNum||'' }}</td>
+        <td data-sid="{{ item.id }}">
+            {{# if(item.status != null){ }}
+                {{ item.status == "ENABLE" ? "启用" : "停用" }}
+            {{# } }}
+        </td>
+         <td id="option">
+            <a href="javascript:;"  data-id="{{ item.id }}" data-opt="edit" class="layui-btn layui-btn-mini">编辑</a>
+             <a href="javascript:;" data-id="{{ item.id }}" data-status="{{ item.status }}" data-opt="isStart" class="layui-btn layui-btn-warm layui-btn-mini">
+             {{# if(item.status == "ENABLE"){ }}
+                                     停用                      
+            {{# } else {}}
+                                     启用
+                {{# }}} </a>
+            <a href="javascript:;" data-id="{{ item.id }}" data-opt="del" class="layui-btn layui-btn-danger layui-btn-mini">删除</a>
+        </td>
+    </tr>
+    {{# }); }}
+
+</script>
+<script>
+layui.use(['form', 'layedit', 'laydate', 'jquery'], function() {
+    var form = layui.form(),
+        layer = layui.layer,
+        layedit = layui.layedit,
+        laydate = layui.laydate,
+        $ = layui.jquery,
+        start = {
+    	      istime: true,
+    	      format: 'YYYY-MM-DD hh:mm:ss',
+    	      max: '2099-06-16 23:59:59',
+    	      istoday: true,
+    	      choose: function (datas) {
+    	          end.min = datas; //开始日选好后，重置结束日的最小日期
+    	      }
+    	  },
+         end = {
+    	      istime: true,
+    	      format: 'YYYY-MM-DD hh:mm:ss',
+    	      max: '2099-06-16 23:59:59',
+    	      istoday: true,
+    	      choose: function (datas) {
+    	          start.max = datas; //结束日选好后，重置开始日的最大日期
+    	      }
+    	  };
+
+    	  document.getElementById('beginTime').onclick = function () {
+    	      start.elem = this;
+    	      laydate(start);
+    	  };
+    	  document.getElementById('endTime').onclick = function () {
+    	      end.elem = this;
+    	      laydate(end);
+    	  };
+    
+       	//监听提交
+		form.on('submit(apply)', function(data) {
+		    var flag =$("#flag").val();
+		    var url;
+		    alert(flag);
+		    if(flag=="add"){
+                url="/topictime/add";
+			   }
+		    else{url="/topictime/update-time";}
+			$.post(Bm["path"]+url, data.field, function(ret){
+                if(ret.status == "SUCCESS"){
+                    layer.alert("提交成功");
+                    setTimeout(function () {
+                        window.location.href = Bm["path"] + "/topic/list.html";
+                    },2000);
+                }
+            });
+			return false;
+		});
+	});
+</script>
+</body>
+
+</html>

@@ -3,6 +3,7 @@ package com.jmu.bibasedmanage.service;
 import com.jmu.bibasedmanage.pojo.BmStudent;
 import com.jmu.bibasedmanage.vo.Page;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -25,4 +26,6 @@ public interface StudentService {
     void delete(String id);
 
     BmStudent getById(String id);
+
+    String importExcel(HttpServletRequest request);
 }

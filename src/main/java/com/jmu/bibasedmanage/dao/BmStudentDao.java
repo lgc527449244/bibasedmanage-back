@@ -2,6 +2,7 @@ package com.jmu.bibasedmanage.dao;
 
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.jmu.bibasedmanage.pojo.BmStudent;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -22,4 +23,6 @@ public interface BmStudentDao {
     int updateByPrimaryKey(BmStudent record);
 
     List<BmStudent> selectByPage(PageBounds pageBounds, Map<String, Object> map);
+    //根据学号获取学生信息
+    BmStudent selectByStudentId(@Param("studentId") String studentId);
 }

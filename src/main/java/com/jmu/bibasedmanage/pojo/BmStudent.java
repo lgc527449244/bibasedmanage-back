@@ -41,6 +41,8 @@ public class BmStudent {
 
     private String commentTeacher;
 
+    private String dataSources;
+
     public String getId() {
         return id;
     }
@@ -192,5 +194,13 @@ public class BmStudent {
 
     public void setCommentTeacher(String commentTeacher) {
         this.commentTeacher = commentTeacher == null ? null : commentTeacher.trim();
+    }
+
+    public String getDataSources() {
+        return dataSources;
+    }
+
+    public void setDataSources(String dataSources) {
+        this.dataSources = dataSources;
     }
 }

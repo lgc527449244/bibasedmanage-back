@@ -39,8 +39,23 @@ function Table(_data){
                 $('#content').children('tr').each(function() {
                     var $that = $(this);
                     $that.children('td:last-child').children('a[data-opt=del]').on('click', function() {
-                        // layer.msg($(this).data('name'));
-                        console.log($(this).data('id'));
+                        var id = $(this).data('id');
+                        layer.confirm('确认删除？', {
+                            title:"提示"
+                        }, function(index){
+                            $.post(Bm['path'] + "/student/delete", {id : id}, function (ret) {
+                                if (ret.status == "SUCCESS"){
+                                    layer.alert("删除成功");
+                                    setTimeout(function () {
+                                        window.location.reload();
+                                    },2000);
+                                }else{
+                                    layer.alert(ret.result);
+                                }
+                            });
+                            layer.close(index);
+                        });
+
                     });
 
                 });
@@ -51,14 +66,17 @@ function Table(_data){
             new Table(data.field);
             return false;
         });
+        //导入信息
         $('#import').on('click', function() {
-            console.log(1);
             layer.open({
                 title: '导入信息',
                 maxmin: false,
                 type: 2,
                 content: Bm["path"] + '/student/excel-upload.html',
-                area: ['300px', '200px']
+                area: ['300px', '200px'],
+                cancel:function () {
+                    window.location.reload();
+                }
             });
         });
     });

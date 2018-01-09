@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <toolbox>
+	<!-- 无用 -->
 	<!-- application start -->
 	<!--<tool>-->
 		<!--<key>shiro</key>-->
@@ -16,4 +17,17 @@
 		<scope>application</scope>
 		<class>org.apache.velocity.tools.generic.MathTool</class>
 	</tool>
+	<toolbox>
+		<tool>
+			<key>date</key>
+			<scope>application</scope>
+			<class>org.apache.velocity.tools.generic.DateTool</class>
+		</tool>
+	</toolbox>
+	<tool>
+		<key>userContext</key>
+		<scope>application</scope>
+		<class>com.jmu.bibasedmanage.util.UserContextVelocityTool</class>
+	</tool>
+	<!-- application end -->
 </toolbox>

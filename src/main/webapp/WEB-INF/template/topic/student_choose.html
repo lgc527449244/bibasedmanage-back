@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>选择课题</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    #parse("/common/include.html")
+    <link rel="stylesheet" href="${base}/static/css/table.css" />
+    <script type="text/javascript" src="${base}/static/pages/topic/student_choose.js"></script>
+</head>
+
+<body>
+<div class="admin-main">
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+    <ul class="layui-tab-title">
+       
+        <li class="layui-this">课题信息列表</li>
+         <li ><a href="${base}/topic/list-persontopic.html?StudentId=1">个人课题信息</a></li>
+    </ul>
+    <div class="layui-tab-content"></div>
+</div>
+   <blockquote class="layui-elem-quote">
+        <div class="layui-inline">
+            <form class="layui-form" action="" style="height: 10px">
+                <div class="layui-form-item" style="margin:0;">
+                    <label class="layui-form-label">关键词：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="keyword" placeholder="输入关键词" autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux" style="padding:0;">
+                        <button lay-filter="search" class="layui-btn" lay-submit><i class="fa fa-search" aria-hidden="true"></i> 查询</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="layui-inline" style="float: right">
+            <a href="#" class="layui-btn layui-btn-small" id="import" style="float: right">
+                <i class="layui-icon">&#xe608;</i> 导入信息
+            </a>
+        </div>
+    </blockquote>
+    <fieldset class="layui-elem-field">
+        <legend>数据列表</legend>
+        <div class="layui-field-box layui-form">
+            <input type="hidden" id="studentId" name="studentId" value="1"></input>
+            <table class="layui-table admin-table">
+                <thead>
+                <tr>
+            <!--        <th style="width: 30px;"><input type="checkbox" lay-filter="allselector" lay-skin="primary"></th>  -->
+                    <th>题目</th>
+                    <th>内容</th>
+                    <th>要求</th>
+                    <th>负责老师</th>
+                    <th>人数限制</th>
+                    <th>当前人数</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="content">
+                </tbody>
+            </table>
+        </div>
+    </fieldset>
+    <div class="admin-table-page">
+        <div id="paged" class="page">
+        </div>
+    </div>
+</div>
+<!--模板-->
+<script type="text/html" id="tpl">
+    {{# layui.each(d.result.result,function(index, item){ }}
+    <tr>
+        <td>{{ item.name||'' }}</td>
+        <td>{{ item.content||'' }}</td>
+        <td>{{ item.required||'' }}</td>
+        <td>{{ item.bmTeacher.name||'' }}</td>
+        <td>{{ item.studentNum||'' }}</td>
+        <td data-sid="{{ item.id }}">{{ item.studentNowNum||'0' }}</td>
+        <td id="option">
+             <a href="javascript:;" data-id="{{item.id }}" data-num="{{item.studentNowNum }}" data-opt="isChoose" class="layui-btn layui-btn-warm layui-btn-mini">
+            {{# if(item.studentNum === item.studentNowNum){}}
+                                           人数已满
+            {{# } else {}}
+                                               选择
+            {{# } }} </a>
+        </td>
+    </tr>
+    {{# }); }}
+</script>
+
+</body>
+
+</html>

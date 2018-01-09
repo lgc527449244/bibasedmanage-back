@@ -10,6 +10,18 @@
     <result column="ln" jdbcType="INTEGER" property="ln" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
   </resultMap>
+  <resultMap id="Union_BaseResultMap" type="java.util.Map">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="operation_group_id" jdbcType="VARCHAR" property="operationGroupId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="enter_url" jdbcType="VARCHAR" property="enterUrl" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="ln" jdbcType="INTEGER" property="ln" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="gname" jdbcType="VARCHAR" property="gname" />
+    <result column="gln" jdbcType="INTEGER" property="gln" />
+    <result column="gremark" jdbcType="VARCHAR" property="gremark" />
+  </resultMap>
   <sql id="Base_Column_List">
     id, operation_group_id, name, enter_url, status, ln, remark
   </sql>
@@ -119,4 +131,24 @@
     from bm_role_operation ro left join bm_operation o on ro.operation_id = o.id
     where ro.role_id = #{0} and o.status = "ENABLE"
   </select>
+  <select id="selectByGroupIdAndRoleId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select *
+    from bm_operation bo left join bm_operation_group bog on bo.operation_group_id=bog.id
+    left join bm_role_operation bro on bo.id= bro.operation_id
+    left join bm_role br on bro.role_id=br.id
+    where bog.id = #{groupId} and br.id = #{roleId} and bo.status = "ENABLE"
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select  <include refid="Base_Column_List" />
+    from bm_operation  where status ="ENABLE"
+  </select>
+  <select id="selectByPage" resultMap="Union_BaseResultMap" parameterType="java.util.Map">
+    select  bm_operation.`name` ,bm_operation.`status`,bm_operation.remark,bm_operation.operation_group_id,bm_operation.ln,bm_operation.id,bm_operation.enter_url,bm_operation_group.name as gname,bm_operation_group.remark as gremark,bm_operation_group.ln as gln
+    from bm_operation LEFT JOIN bm_operation_group ON bm_operation.operation_group_id = bm_operation_group.id
+    where 1=1
+    <if test="keyword != null and keyword != ''">
+      and bm_operation.`name` like concat("%", #{keyword}, "%")
+    </if>
+  </select>
+
 </mapper>

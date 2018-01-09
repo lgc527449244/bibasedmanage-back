@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -69,6 +69,7 @@ public class BmStudentController {
         return ResponseUtil.success();
     }
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
+    @ResponseBody
     public JsonResponse delete(String id){
         studentService.delete(id);
         return ResponseUtil.success();
@@ -79,4 +80,9 @@ public class BmStudentController {
         return new ModelAndView("/student/excel_upload.html");
     }
 
+    @RequestMapping("/excel-upload")
+    @ResponseBody
+    public JsonResponse uploadFile(HttpServletRequest request){
+        return ResponseUtil.success(studentService.importExcel(request));
+    }
 }

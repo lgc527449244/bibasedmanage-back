@@ -1,7 +1,11 @@
 #parse("common/common.html")
+#set($user=$session.getAttribute("__user__"))
 <link rel="stylesheet" href="${base}/static/plugins/layui/css/layui.css" media="all" />
 <link rel="stylesheet" href="${base}/static/css/global.css" media="all">
 <link rel="stylesheet" href="${base}/static/plugins/font-awesome/css/font-awesome.min.css">
 
 <script type="text/javascript" src="${base}/static/plugins/layui/layui.js"></script>
-<script type="text/javascript" src="${base}/static/plugins/layui/layui.js"></script>
+
+<script type="text/javascript">
+    Bm["loginName"] = "$!{user.loginName}";
+</script>

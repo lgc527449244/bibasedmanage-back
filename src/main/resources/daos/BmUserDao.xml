@@ -145,4 +145,21 @@
     from bm_user
     where login_name = #{0} and user_status = "NORMAL"
   </select>
+  <select id="selectCurrentByLoginName" parameterType="java.lang.String" resultType="com.jmu.bibasedmanage.vo.CurrentUser">
+    select bu.id as id,bu.login_name as loginName,bu.login_password as loginPassword,bu.salt as salt, bu.role_id as roleId,
+    bu.ts_id as tsId, br.name as roleName, br.remark as roleRemark
+    from bm_user bu left join bm_role br on bu.role_id=br.id
+    where bu.login_name=#{loginName}
+  </select>
+
+  <select id="selectByPage" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from bm_user
+    where 1=1
+    <if test="keyword != null and keyword != ''">
+      and login_name like concat("%", #{keyword}, "%")
+    </if>
+    order by create_time desc
+  </select>
 </mapper>
