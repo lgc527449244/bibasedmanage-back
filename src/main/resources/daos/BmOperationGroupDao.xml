@@ -97,7 +97,7 @@
         left join bm_role_operation bro on bo.id = bro.operation_id
         left join bm_role br on bro.role_id = br.id
       where br.id = #{roleId} and bog.status = "ENABLE"
-      order by bo.ln
+      order by bog.ln
   </select>
   <select id="selectByPage" resultMap="BaseResultMap" parameterType="java.util.Map">
     select

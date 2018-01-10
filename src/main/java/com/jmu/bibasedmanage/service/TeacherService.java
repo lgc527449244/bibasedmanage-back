@@ -10,6 +10,8 @@ import com.jmu.bibasedmanage.pojo.BmTeacher;
 import com.jmu.bibasedmanage.pojo.BmTeacherGroup;
 import com.jmu.bibasedmanage.vo.Page;
 
+import javax.servlet.http.HttpServletRequest;
+
 public interface TeacherService {
 	 public BmTeacherGroup searchGroup(String teacherId);
 	 public BmTeacherGroup searchStudent(String teacherId);
@@ -26,4 +28,6 @@ public interface TeacherService {
 	     */
 	Page<BmTeacher> list(Map map, Page<BmTeacher> page);
 	 public BmTeacher getById(String id);
+
+	String importExcel(HttpServletRequest request);
 }

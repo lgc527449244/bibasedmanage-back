@@ -7,6 +7,7 @@ import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.jmu.bibasedmanage.pojo.BmStudent;
 import com.jmu.bibasedmanage.pojo.BmTeacher;
 import com.jmu.bibasedmanage.pojo.BmTopic;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -26,4 +27,6 @@ public interface BmTeacherDao {
     List<BmTeacher> selectByLikePage(Map map, PageBounds pageBounds);
  
     List<BmTeacher> selectByLike(String teacherInfo);
+
+    BmTeacher selectByJobNumber(@Param("jobNumber") String jobNumber);
 }

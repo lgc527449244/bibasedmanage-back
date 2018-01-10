@@ -75,6 +75,16 @@ public class BmStudentController {
         return ResponseUtil.success();
     }
 
+    @RequestMapping(value = "/operation", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse operation(String id, String status){
+        BmStudent bmStudent = new BmStudent();
+        bmStudent.setId(id);
+        bmStudent.setStatus(status);
+        studentService.update(bmStudent);
+        return ResponseUtil.success();
+    }
+
     @RequestMapping(value = "excel-upload.html")
     public ModelAndView excelUpload(){
         return new ModelAndView("/student/excel_upload.html");

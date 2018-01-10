@@ -88,9 +88,9 @@ public class MyRealm extends AuthorizingRealm{
     }
     //用来测试的算出密码password盐值加密后的结果，下面方法用于新增用户添加到数据库操作的，我这里就直接用main获得，直接数据库添加了，省时间
     public static void main(String[] args) {
-        String saltSource = "abcdef";
+        String saltSource = "dasfsddsaf";
         String hashAlgorithmName = "MD5";
-        String credentials = "password";
+        String credentials = "123456";
         Object salt = new Md5Hash(saltSource);
         int hashIterations = 1024;
         Object result = new SimpleHash(hashAlgorithmName, credentials, salt, hashIterations);

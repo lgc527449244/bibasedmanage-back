@@ -32,10 +32,10 @@
                 <input type="password" name="password" lay-verify="required" autocomplete="off" placeholder="这里输入密码" class="layui-input">
             </div>
             <div class="layui-form-item">
-                <div class="beg-pull-left beg-login-remember">
-                    <label>记住帐号？</label>
-                    <input type="checkbox" name="rememberMe" value="true" lay-skin="switch" checked title="记住帐号">
-                </div>
+                <!--<div class="beg-pull-left beg-login-remember">-->
+                    <!--<label>记住帐号？</label>-->
+                    <!--<input type="checkbox" name="rememberMe" value="true" lay-skin="switch" checked title="记住帐号">-->
+                <!--</div>-->
                 <div class="beg-pull-right">
                     <button class="layui-btn layui-btn-primary" lay-submit lay-filter="login">
                         <i class="layui-icon">&#xe650;</i> 登录
@@ -49,20 +49,6 @@
         <!--<p>Beginner © www.zhengjinfan.cn</p>-->
     </footer>
 </div>
-<script type="text/javascript" src="${base}/static/plugins/layui/layui.js"></script>
-<script>
-    layui.use(['layer', 'form'], function() {
-        var layer = layui.layer,
-            $ = layui.jquery,
-            form = layui.form();
-
-//        form.on('submit(login)',function(data){
-//
-//            location.href='index.html';
-//            return false;
-//        });
-    });
-</script>
 </body>
 
 </html>

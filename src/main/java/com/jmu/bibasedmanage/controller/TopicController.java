@@ -148,7 +148,16 @@ public class TopicController{
 				return ResponseUtil.error("你已经选过课题了！");
 			}
 			
-	 }	
-		
-		 
+	 }
+
+	@RequestMapping(value = "excel-upload.html")
+	public ModelAndView excelUpload(){
+		return new ModelAndView("/topic/excel_upload.html");
+	}
+
+	@RequestMapping("/excel-upload")
+	@ResponseBody
+	public JsonResponse uploadFile(HttpServletRequest request){
+		return ResponseUtil.success(topicService.importExcel(request));
+	}
 }

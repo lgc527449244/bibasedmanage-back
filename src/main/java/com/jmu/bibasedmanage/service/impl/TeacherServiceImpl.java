@@ -1,11 +1,22 @@
 package com.jmu.bibasedmanage.service.impl;
 
+import java.io.FileNotFoundException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
+import com.jmu.bibasedmanage.consts.CommonConst;
+import com.jmu.bibasedmanage.excel.ExcelImportContext;
+import com.jmu.bibasedmanage.excel.ExcelImportHandler;
+import com.jmu.bibasedmanage.excel.ExcelImportService;
+import com.jmu.bibasedmanage.excel.RowData;
+import com.jmu.bibasedmanage.util.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +44,9 @@ public class TeacherServiceImpl implements TeacherService{
 	private BmStudentDao bmStudentDao;
 	@Resource
 	private BmTeacherDao bmteacherDao;
+	@Autowired
+	private ExcelImportService excelImportService;
+
 	/**
 	 * 点击查看答辩组的信息。
 	 * @param teacherId
@@ -102,4 +116,70 @@ public class TeacherServiceImpl implements TeacherService{
 	 public BmTeacher getById(String id) {
        return bmteacherDao.selectByPrimaryKey(id);
    }
+
+	public String importExcel(HttpServletRequest request) {
+		//文件上传
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String savePath = CommonConst.FILE_UPLOAD_PATH + sdf.format(new Date()) + "//";
+		String fileName = FileUtils.upload(request, savePath);
+		//导数据进数据库
+		String ret = null;
+
+		final List<BmTeacher> insertList = new ArrayList<BmTeacher>();
+		try {
+			ret = excelImportService.importExcel(fileName, new ExcelImportHandler() {
+				public String importRow(int rowIndex, RowData rowData, ExcelImportContext context) {
+					String jobNumber = rowData.getContentByColumnName("工号");
+					String college = rowData.getContentByColumnName("学院");
+					String jobTitle = rowData.getContentByColumnName("职称");
+					String name = rowData.getContentByColumnName("姓名");
+					String email = rowData.getContentByColumnName("电子邮箱");
+					String mobile = rowData.getContentByColumnName("手机");
+
+					//数据校验
+					StringBuffer errMsg = new StringBuffer();
+					BmTeacher oldTeacher = bmteacherDao.selectByJobNumber(jobNumber);
+					if(oldTeacher != null){
+						errMsg.append("该工号的教师已存在；");
+					}
+
+					if(errMsg.length() > 0){
+						return errMsg.toString();
+					}
+
+					//TODO 设置数据来源
+					BmTeacher teacher = new BmTeacher();
+					teacher.setJobNumber(jobNumber);
+					teacher.setCollege(college);
+					teacher.setJobTitle(jobTitle);
+					teacher.setName(name);
+					teacher.setEmail(email);
+					teacher.setMobile(mobile);
+					insertList.add(teacher);
+
+					return null;
+				}
+			});
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		insertAll(insertList);
+		return ret;
+	}
+
+	/**
+	 * 批量导入，如果失败则全部回滚
+	 * @param bmTeachers
+	 */
+	@Transactional
+	public void insertAll(List<BmTeacher> bmTeachers){
+		for (BmTeacher teacher : bmTeachers) {
+			teacher.setId(UUIDUtils.generator());
+			teacher.setCreateTime(new Date());
+			teacher.setRecordStatus(CommonConst.RECORD_STATUS_NORMAL);
+			teacher.setStatus(CommonConst.STATUS_ENABLE);
+//			teacher.setDataSources(CommonConst.DATA_SOURCES_EXCEL);
+			bmteacherDao.insert(teacher);
+		}
+	}
 }

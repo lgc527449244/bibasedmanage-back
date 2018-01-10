@@ -61,7 +61,6 @@ public class BmTeacherController {
 	/**
 	 * 添加答辩的评价和评分
 	 * 
-	 * @param studentId
 	 * @return Created by hhq on 2018-1-2.
 	 */
 	@RequestMapping("/save-answer")
@@ -140,4 +139,15 @@ public class BmTeacherController {
     public JsonResponse listData(@RequestParam Map<String, Object> map, Page<BmTeacher> page){
         return ResponseUtil.success(teacherService.list(map, page));
     }
+
+	@RequestMapping(value = "excel-upload.html")
+	public ModelAndView excelUpload(){
+		return new ModelAndView("/teacher/excel_upload.html");
+	}
+
+	@RequestMapping("/excel-upload")
+	@ResponseBody
+	public JsonResponse uploadFile(HttpServletRequest request){
+		return ResponseUtil.success(teacherService.importExcel(request));
+	}
 }

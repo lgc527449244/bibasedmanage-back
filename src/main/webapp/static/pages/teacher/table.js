@@ -102,8 +102,11 @@ function Table(_data){
                 title: '导入信息',
                 maxmin: false,
                 type: 2,
-                content: Bm["path"] + '/student/excel-upload.html',
-                area: ['300px', '200px']
+                content: Bm["path"] + '/teacher/excel-upload.html',
+                area: ['300px', '200px'],
+                cancel:function () {
+                    window.location.reload();
+                }
             });
         });
     });

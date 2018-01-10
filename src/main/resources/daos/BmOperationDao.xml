@@ -130,6 +130,7 @@
     select o.*
     from bm_role_operation ro left join bm_operation o on ro.operation_id = o.id
     where ro.role_id = #{0} and o.status = "ENABLE"
+    order by o.ln
   </select>
   <select id="selectByGroupIdAndRoleId" parameterType="java.lang.String" resultMap="BaseResultMap">
     select *

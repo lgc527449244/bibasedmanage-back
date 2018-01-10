@@ -105,7 +105,11 @@
         <td>{{ item.name||'' }}</td>
         <td>{{ item.content||'' }}</td>
         <td>{{ item.required||'' }}</td>
+        {{# if(item.bmTeacher != null){ }}
         <td>{{ item.bmTeacher.name||'' }}</td>
+            {{# } else{ }}
+        <td></td>
+        {{# } }}
         <td>{{ item.studentNum||'' }}</td>
         <td data-sid="{{ item.id }}">
             {{# if(item.status != null){ }}

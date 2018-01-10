@@ -35,6 +35,24 @@ function Table(_data){
                     });
 
                 });
+                //绑定所有启用/停用按钮事件
+                $('#content').children('tr').each(function() {
+                    var $that = $(this);
+                    $that.children('td:last-child').children('a[data-opt=operation]').on('click', function() {
+                        var id = $(this).data('id');
+                        var _type = $(this).data('type');
+                        console.log(id + "status:"+_type);
+                        $.post(Bm["path"] + "/student/operation", {id:id,status:_type},function (ret) {
+                           if(ret.status == "SUCCESS"){
+                               layer.alert("操作成功");
+                               setTimeout(function () {
+                                   window.location.reload();
+                               },2000);
+                           }
+                        });
+                    });
+
+                });
                 //绑定所有删除按钮事件
                 $('#content').children('tr').each(function() {
                     var $that = $(this);

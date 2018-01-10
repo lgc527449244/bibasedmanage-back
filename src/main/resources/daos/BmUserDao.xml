@@ -156,7 +156,7 @@
     select
     <include refid="Base_Column_List" />
     from bm_user
-    where 1=1
+    where user_status = "NORMAL"
     <if test="keyword != null and keyword != ''">
       and login_name like concat("%", #{keyword}, "%")
     </if>

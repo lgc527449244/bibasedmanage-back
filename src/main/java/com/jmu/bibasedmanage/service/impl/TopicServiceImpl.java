@@ -1,13 +1,26 @@
 package com.jmu.bibasedmanage.service.impl;
 
 
+import java.io.FileNotFoundException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
+import com.jmu.bibasedmanage.consts.CommonConst;
+import com.jmu.bibasedmanage.dao.BmTeacherDao;
+import com.jmu.bibasedmanage.excel.ExcelImportContext;
+import com.jmu.bibasedmanage.excel.ExcelImportHandler;
+import com.jmu.bibasedmanage.excel.ExcelImportService;
+import com.jmu.bibasedmanage.excel.RowData;
+import com.jmu.bibasedmanage.util.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
@@ -27,6 +40,11 @@ public class TopicServiceImpl implements TopicService{
 	private BmTopicDao bmTopicDao;
 	@Resource
 	private BmStudentDao bmStudentDao;
+	@Autowired
+	private ExcelImportService excelImportService;
+	@Autowired
+	private BmTeacherDao bmTeacherDao;
+
 	public List<BmTopic> selectByLike(String topicInfo){
 		return bmTopicDao.selectByLike(topicInfo) ;
 	}
@@ -78,7 +96,6 @@ public class TopicServiceImpl implements TopicService{
 	 /**
 	  * 分页查询课题信息
 	  */
-	@Override
 	public Page<BmTopic> list(Map map, Page<BmTopic> page) {
 		    PageBounds pageBounds = new PageBounds(page.getPageNo(), page.getPageSize());
 //		    if(map.containsKey("studentId")){
@@ -99,5 +116,89 @@ public class TopicServiceImpl implements TopicService{
 	public BmTopic selectByStudentId(String StudentId){
 		return 	selectTopAndteacherById(bmStudentDao.selectByPrimaryKey(StudentId).getTopicId());
 		
+	}
+
+	public String importExcel(HttpServletRequest request) {
+		//文件上传
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String savePath = CommonConst.FILE_UPLOAD_PATH + sdf.format(new Date()) + "//";
+		String fileName = FileUtils.upload(request, savePath);
+		//导数据进数据库
+		String ret = null;
+
+		final List<BmTopic> insertList = new ArrayList<BmTopic>();
+		try {
+			ret = excelImportService.importExcel(fileName, new ExcelImportHandler() {
+				public String importRow(int rowIndex, RowData rowData, ExcelImportContext context) {
+					String name = rowData.getContentByColumnName("题目");
+					String content = rowData.getContentByColumnName("内容");
+					String required = rowData.getContentByColumnName("要求");
+					String jobNumber = rowData.getContentByColumnName("负责老师工号");
+					String teacherName = rowData.getContentByColumnName("负责老师");
+					String studentNumStr = rowData.getContentByColumnName("人数限制");
+
+					String teacherId = null;
+					int studentNum = 0;
+
+					//数据校验
+					StringBuffer errMsg = new StringBuffer();
+					BmTeacher oldTeacher = bmTeacherDao.selectByJobNumber(jobNumber);
+					if(oldTeacher == null){
+						errMsg.append("工号出错；");
+					}else{
+						teacherId = oldTeacher.getId();
+					}
+					if(StringUtils.isBlank(studentNumStr)){
+						errMsg.append("人数限制不能为空;");
+					}else{
+						studentNumStr = studentNumStr.trim();
+						try{
+							studentNum = Integer.parseInt(studentNumStr);
+							if(studentNum < 0){
+								errMsg.append("人数限制必须大于0;");
+							}
+						}catch (Exception e){
+							errMsg.append(e.getMessage());
+						}
+					}
+
+					if(errMsg.length() > 0){
+						return errMsg.toString();
+					}
+
+					//TODO 设置数据来源
+					BmTopic topic = new BmTopic();
+					topic.setName(name);
+					topic.setContent(content);
+					topic.setRequired(required);
+					topic.setStudentNum(studentNum);
+					topic.setTeacherId(teacherId);
+
+					insertList.add(topic);
+
+					return null;
+				}
+			});
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		insertAll(insertList);
+		return ret;
+	}
+
+	/**
+	 * 批量导入，如果失败则全部回滚
+	 * @param bmTopics
+	 */
+	@org.springframework.transaction.annotation.Transactional
+	public void insertAll(List<BmTopic> bmTopics){
+		for (BmTopic topic : bmTopics) {
+			topic.setId(UUIDUtils.generator());
+			topic.setCreateTime(new Date());
+			topic.setRecordStatus(CommonConst.RECORD_STATUS_NORMAL);
+			topic.setStatus(CommonConst.STATUS_ENABLE);
+//			topic.setDataSources(CommonConst.DATA_SOURCES_EXCEL);
+			bmTopicDao.insert(topic);
+		}
 	}
 }

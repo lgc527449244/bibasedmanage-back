@@ -186,4 +186,11 @@
       record_status = #{recordStatus,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+
+  <select id="selectByJobNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from bm_teacher
+    where job_number = #{jobNumber}
+  </select>
 </mapper>

@@ -7,6 +7,9 @@
 </head>
 <body>
     <center>
+        <button type="button" class="layui-btn" id="uploadDemo">
+            <i class="layui-icon">&#xe67c;</i>下载模板
+        </button>
         <input type="file" name="file" lay-type="file" lay-ext="xls" lay-title="请上传表格"
                class="layui-upload-file" >
         <div id="errorFile"></div>
@@ -15,6 +18,10 @@
         layui.use('upload', function(){
             var layer = layui.layer;
             var $ = layui.jquery;
+            $("#uploadDemo").on("click", function () {
+               window.location.href = Bm["path"] + "/excel/student_demo.xls";
+            });
+
             layui.upload({
                 url:Bm["path"] + '/student/excel-upload'
                 ,before: function(input){
