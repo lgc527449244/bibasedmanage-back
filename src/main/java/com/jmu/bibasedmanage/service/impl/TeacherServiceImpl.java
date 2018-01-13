@@ -29,6 +29,7 @@ import com.jmu.bibasedmanage.pojo.BmStudent;
 import com.jmu.bibasedmanage.pojo.BmTeacher;
 import com.jmu.bibasedmanage.pojo.BmTeacherGroup;
 import com.jmu.bibasedmanage.service.TeacherService;
+import com.jmu.bibasedmanage.util.SecurityUtils;
 import com.jmu.bibasedmanage.util.UUIDUtils;
 import com.jmu.bibasedmanage.vo.Page;
 /**
@@ -89,11 +90,18 @@ public class TeacherServiceImpl implements TeacherService{
 		 return bmTeacher;
 	 }
 	 public void delete(String id){
-		 bmteacherDao.deleteByPrimaryKey(id);
+		BmTeacher teacher = new BmTeacher();
+		teacher.setId(id);
+		teacher.setRecordStatus(CommonConst.RECORD_STATUS_DELETED);
+	 	bmteacherDao.updateByPrimaryKeySelective(teacher);
 	 }
 	 public void add(BmTeacher bmTeacher){
 		 bmTeacher.setId(UUIDUtils.generator());
 		 bmTeacher.setCreateTime(new Date());
+		 bmTeacher.setRecordStatus(CommonConst.RECORD_STATUS_NORMAL);
+		 if(SecurityUtils.getCurrentUser().getRoleName().equals("admin")){
+			 bmTeacher.setStatus("ENABLE");    
+		 }
 		 bmteacherDao.insert(bmTeacher);
 	 }
 	 /**
@@ -106,6 +114,7 @@ public class TeacherServiceImpl implements TeacherService{
 	 /**
 	  * 分页查询教师信息
 	  */
+	@Override
 	public Page<BmTeacher> list(Map map, Page<BmTeacher> page) {
 		    PageBounds pageBounds = new PageBounds(page.getPageNo(), page.getPageSize());
 	        List<BmTeacher> teachers =  bmteacherDao.selectByLikePage(map,pageBounds);
@@ -113,6 +122,7 @@ public class TeacherServiceImpl implements TeacherService{
 	        page.setTotalCountByPageList((PageList) teachers);
 	        return page;
 	}
+	@Override
 	 public BmTeacher getById(String id) {
        return bmteacherDao.selectByPrimaryKey(id);
    }

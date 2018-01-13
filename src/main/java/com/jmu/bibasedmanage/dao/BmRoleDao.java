@@ -22,4 +22,6 @@ public interface BmRoleDao {
 
     int updateByPrimaryKey(BmRole record);
     List<BmRole> selectByPage(PageBounds pageBounds, Map<String, Object> map);
+
+    List<BmRole> selectAll();
 }

@@ -40,11 +40,7 @@
                 </div>
             </form>
         </div>
-        <!--<div class="layui-inline" style="float: right">-->
-            <!--<a href="#" class="layui-btn layui-btn-small" id="import" style="float: right">-->
-                <!--<i class="layui-icon">&#xe608;</i> 导入信息-->
-            <!--</a>-->
-        <!--</div>-->
+
     </blockquote>
     <fieldset class="layui-elem-field">
         <!--<legend>数据列表</legend>-->
@@ -72,7 +68,7 @@
 <!--模板-->
 <script type="text/html" id="tpl">
     {{# layui.each(d.result.result, function(index, item){ }}
-    <tr id="{{ item.id }}">
+    <tr id="tr-{{ item.id }}">
         <td>{{ item.name||'' }}</td>
         <td>{{ item.remark||'' }}</td>
         <td>

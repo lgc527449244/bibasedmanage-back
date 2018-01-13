@@ -1,6 +1,7 @@
 /**
  * Created by ljc on 2018/1/3.
  */
+
 function Table(_data){
     layui.config({
         base: Bm["path"] + '/static/js/'
@@ -11,7 +12,6 @@ function Table(_data){
             layerTips = parent.layer === undefined ? layui.layer : parent.layer, //获取父窗口的layer对象
             layer = layui.layer, //获取当前窗口的layer对象
             form = layui.form();
-//            var tId=$("#tId").val();
         paging.init({
             openWait: true,
             url: Bm["path"] + '/topic/list', //地址
@@ -21,7 +21,7 @@ function Table(_data){
             tempElem: '#tpl', //模块容器
             pageConfig: { //分页参数配置
                 elem: '#paged', //分页容器
-                pageSize: 2 //分页大小
+                pageSize: 5 //分页大小
             },
             success: function() { //渲染成功的回调
             },
@@ -41,21 +41,21 @@ function Table(_data){
                 $('#content').children('tr').each(function() {
                     var $that = $(this);
                     $that.children('td:last-child').children('a[data-opt=del]').on('click', function() {
-                    	 var teach_id =$(this).data('id');
+                    	 var topic_id =$(this).data('id');
                          layer.msg('你确定删除么？', {
                              time: 0 //不自动关闭
                              ,btn: ['确定', '取消']
                              ,yes: function(){
                                  $.ajax({
                                      url:Bm["path"] +"/topic/delete",
-                                     data:{'id':teach_id},
+                                     data:{'id':topic_id},
                                      type:"post",
                                      dataType:"json",
                                      success:function(data){
-                                         if(data.result==0)
-                                             layer.msg("删除失败",{time:1000});
-                                         if(data.result==1){
-                                             $("#tr-"+role_id).remove();
+                                    	 if(data.status=="ERROR")
+                                             layer.msg("删除失败,该课题已被选择",{time:1000});
+                                         if(data.status=="SUCCESS"){
+                                        	 $("[data-rid='"+ topic_id+"']").remove();
                                              layer.msg("删除成功",{time:1000});
                                          }
                                      }
@@ -71,6 +71,7 @@ function Table(_data){
         });
         //处理搜索表单提交
         form.on('submit(search)',function (data) {
+        //	alert(data);
             new Table(data.field);
             return false;
         });
@@ -78,7 +79,6 @@ function Table(_data){
 }
 
 window.onload = function(){
-    new Table();
-
+	    new Table({flag :"1"});  //教师查询自己的课题的标志
 }
 

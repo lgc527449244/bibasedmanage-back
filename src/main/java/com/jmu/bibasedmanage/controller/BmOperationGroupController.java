@@ -21,14 +21,14 @@ import java.util.Map;
  * Created by WJQ on 2018/1/7.
  */
 @Controller
-@RequestMapping("/operationGroup")
+@RequestMapping("/operation-group")
 public class BmOperationGroupController {
 
     @Autowired
     private OperationGroupService operationGroupService;
     @RequestMapping(value = "/list.html", method = RequestMethod.GET)
     public ModelAndView list(){
-        return new ModelAndView("operationGroup/table.html");
+        return new ModelAndView("operation-group/table.html");
     }
 
     /**
@@ -45,7 +45,7 @@ public class BmOperationGroupController {
 
     @RequestMapping(value = "/add.html", method = RequestMethod.GET)
     public ModelAndView add(){
-        return new ModelAndView("operationGroup/form_add.html");
+        return new ModelAndView("operation-group/form_add.html");
     }
 
     @RequestMapping(value = "/get-all", method = RequestMethod.POST)
@@ -67,7 +67,7 @@ public class BmOperationGroupController {
     }
     @RequestMapping(value = "/update.html",method = RequestMethod.GET)
     public ModelAndView update(String id){
-        return new ModelAndView("/operationGroup/form_edit.html")
+        return new ModelAndView("/operation-group/form_edit.html")
                 .addObject("id", id);
     }
     @RequestMapping(value = "/update",method = RequestMethod.POST)
@@ -77,6 +77,7 @@ public class BmOperationGroupController {
         return ResponseUtil.success();
     }
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
+    @ResponseBody
     public JsonResponse delete(String id){
         operationGroupService.delete(id);
         return ResponseUtil.success();

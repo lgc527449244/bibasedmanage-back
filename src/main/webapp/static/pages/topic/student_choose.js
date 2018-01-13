@@ -12,7 +12,7 @@ function Table(_data){
             layerTips = parent.layer === undefined ? layui.layer : parent.layer, //获取父窗口的layer对象
             layer = layui.layer, //获取当前窗口的layer对象
             form = layui.form();
-            var student_id = $("#studentId").val();
+          //  var student_id = $("#studentId").val();
         paging.init({
             openWait: true,
             url: Bm["path"] + '/topic/list', //地址
@@ -22,7 +22,7 @@ function Table(_data){
             tempElem: '#tpl', //模块容器
             pageConfig: { //分页参数配置
                 elem: '#paged', //分页容器
-                pageSize: 2 //分页大小
+                pageSize: 5 //分页大小
             },
             success: function() { //渲染成功的回调
             },
@@ -42,10 +42,11 @@ function Table(_data){
                     		disabled="false";
                     	 if( $that.children('td:last-child').children('a[data-opt=isChoose]').text().trim()=="选择"){
                     		
-                    		 $.post(Bm["path"] + "/topic/choose-topic", {id:$(this).data('id'),studentId:student_id,choose:"Y"},function(ret){
+                    		 $.post(Bm["path"] + "/topic/choose-topic", {id:$(this).data('id'),choose:"Y"},function(ret){
                                  if(ret.status == "SUCCESS"){
+                                	 window.location.reload();
                                 	 currenNum=Number(currenNum)+1;
-                                	 alert($("[data-sid='"+currenId+"']").text());
+                                	// alert($("[data-sid='"+currenId+"']").text());
                             		 $("[data-sid='"+ currenId+"']").text(currenNum);
                                 	 $that.children('td:last-child').children('a[data-opt=isChoose]').text("取消");
                                 	 disabled="true";
@@ -59,8 +60,9 @@ function Table(_data){
                     	 }
                     	 else if( $that.children('td:last-child').children('a[data-opt=isChoose]').text().trim()=="取消"){
                     		
-                    		 $.post(Bm["path"] + "/topic/choose-topic", {id:$(this).data('id'),studentId:student_id,choose:"N"},function(ret){
+                    		 $.post(Bm["path"] + "/topic/choose-topic", {id:$(this).data('id'),choose:"N"},function(ret){
                                  if(ret.status == "SUCCESS"){
+                                	 window.location.reload();
                                 	 currenNum=Number(currenNum)-1;
                                 	 $("[data-sid='"+ currenId+"']").text(currenNum);
                                 	  $that.children('td:last-child').children('a[data-opt=isChoose]').text("选择");

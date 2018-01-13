@@ -121,11 +121,12 @@
                 form.render();
             }
         });
-        $.post(Bm["path"] + "/operationGroup/get-all", {id : "111"}, function(ret){
+        //改过operation-group
+        $.post(Bm["path"] + "/operation-group/get-all", {id : "111"}, function(ret){
             if(ret.status == "SUCCESS"){
                //  alert(JSON.stringify(ret.result))
                 for(var i=0;i<ret.result.length;i++){
-                    $("#operationGroupId").append('<option value="'+ret.result[i].id+'" id="'+ret.result[i].id+'">'+ret.result[i].name+'</option>')
+                    $("#operationGroupId").append('<option value="'+ret.result[i].id+'" id="'+ret.result[i].id+'">'+ret.result[i].remark+'</option>')
 
                 }
                 $("#operationGroupId option" ). each( function () {
@@ -133,21 +134,6 @@
                         $(this).attr("selected","selected");
                     }
                 })
-               /* $ ("#operationGroupId option" ). each( function () {
-                    alert (1);
-                   /if($(this).text()=='数码产品'){
-                        $(this).attr("selected","selected");
-                        alert("成功");
-                        return false;
-                    }
-                })*/
-                /* var _data = ret.result;
-                 var getTpl = tpl.innerHTML,
-                     view = document.getElementById('content');
-                 laytpl(getTpl).render(_data, function(html){
-                     view.innerHTML = html;
-                 });*/
-                //select下拉框出不来时执行
                 form.render();
             }
         });

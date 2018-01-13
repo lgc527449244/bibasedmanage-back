@@ -2,10 +2,10 @@ package com.jmu.bibasedmanage.service;
 
 
 import com.jmu.bibasedmanage.pojo.BmRole;
-import com.jmu.bibasedmanage.pojo.BmStudent;
 import com.jmu.bibasedmanage.vo.Page;
 
 import java.util.Map;
+import java.util.List;
 
 /**
  * Created by ljc on 2017/12/26.
@@ -21,5 +21,6 @@ public interface RoleService {
 
     void delete(String id);
 
+    List<BmRole> selectAll();
 
 }

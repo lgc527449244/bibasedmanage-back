@@ -55,7 +55,7 @@
 					<div class="layui-inline">
 						<label class="layui-form-label">专业</label>
 						<div class="layui-input-inline">
-							<input type="text" name="major" lay-verify="required" autocomplete="off" placeholder="请输入学院" class="layui-input">
+							<input type="text" name="major" lay-verify="required" autocomplete="off" placeholder="请输入专业" class="layui-input">
 						</div>
 					</div>
 				</div>
@@ -63,7 +63,7 @@
 					<div class="layui-inline">
 						<label class="layui-form-label">班级</label>
 						<div class="layui-input-inline">
-							<input type="text" name="classes" lay-verify="required" autocomplete="off" placeholder="请输入学院" class="layui-input">
+							<input type="text" name="classes" lay-verify="required" autocomplete="off" placeholder="请输入班级" class="layui-input">
 						</div>
 					</div>
 					<div class="layui-inline">
@@ -106,12 +106,13 @@
 			</form>
 		</div>
 		<script>
-            var $ = layui.jquery;
-			layui.use(['form', 'layedit', 'laydate'], function() {
+
+			layui.use(['form', 'layedit', 'laydate', 'jquery'], function() {
 				var form = layui.form(),
 					layer = layui.layer,
 					layedit = layui.layedit,
-					laydate = layui.laydate;
+					laydate = layui.laydate,
+                    $ = layui.jquery;
 
 				//自定义验证规则
 				form.verify({
@@ -128,9 +129,6 @@
 
 //				//监听提交
 				form.on('submit(sub)', function(data) {
-//					layer.alert(JSON.stringify(data.field), {
-//						title: '最终的提交信息'
-//					});
 					$.post(Bm["path"]+"/student/add", data.field, function(ret){
 					   if(ret.status == "SUCCESS"){
 					       layer.alert("提交成功");

@@ -22,7 +22,7 @@
     <ul class="layui-tab-title">
        
         <li class="layui-this">课题信息列表</li>
-         <li ><a href="${base}/topic/list-persontopic.html?StudentId=1">个人课题信息</a></li>
+         <li ><a href="${base}/topic/list-persont-topic.html">个人课题信息</a></li>
     </ul>
     <div class="layui-tab-content"></div>
 </div>
@@ -40,16 +40,10 @@
                 </div>
             </form>
         </div>
-        <div class="layui-inline" style="float: right">
-            <a href="#" class="layui-btn layui-btn-small" id="import" style="float: right">
-                <i class="layui-icon">&#xe608;</i> 导入信息
-            </a>
-        </div>
     </blockquote>
     <fieldset class="layui-elem-field">
-        <legend>数据列表</legend>
+      
         <div class="layui-field-box layui-form">
-            <input type="hidden" id="studentId" name="studentId" value="1"></input>
             <table class="layui-table admin-table">
                 <thead>
                 <tr>
@@ -80,14 +74,18 @@
         <td>{{ item.name||'' }}</td>
         <td>{{ item.content||'' }}</td>
         <td>{{ item.required||'' }}</td>
+        {{# if(item.bmTeacher != null){ }}
         <td>{{ item.bmTeacher.name||'' }}</td>
+           {{# } else{ }}
+        <td></td>
+            {{# } }}
         <td>{{ item.studentNum||'' }}</td>
         <td data-sid="{{ item.id }}">{{ item.studentNowNum||'0' }}</td>
         <td id="option">
              <a href="javascript:;" data-id="{{item.id }}" data-num="{{item.studentNowNum }}" data-opt="isChoose" class="layui-btn layui-btn-warm layui-btn-mini">
             {{# if(item.studentNum === item.studentNowNum){}}
                                            人数已满
-            {{# } else {}}
+            {{# } else{}}
                                                选择
             {{# } }} </a>
         </td>

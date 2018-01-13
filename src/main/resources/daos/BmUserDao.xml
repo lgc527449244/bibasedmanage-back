@@ -12,6 +12,18 @@
     <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
     <result column="ts_id" jdbcType="VARCHAR" property="tsId" />
   </resultMap>
+  <resultMap id="Merge_BaseResultMap" type="com.jmu.bibasedmanage.pojo.BmUserMerge">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="role_id" jdbcType="VARCHAR" property="roleId" />
+    <result column="login_name" jdbcType="VARCHAR" property="loginName" />
+    <result column="login_password" jdbcType="VARCHAR" property="loginPassword" />
+    <result column="salt" jdbcType="VARCHAR" property="salt" />
+    <result column="user_status" jdbcType="VARCHAR" property="userStatus" />
+    <result column="user_lock_time" jdbcType="TIMESTAMP" property="userLockTime" />
+    <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
+    <result column="ts_id" jdbcType="VARCHAR" property="tsId" />
+    <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+  </resultMap>
   <sql id="Base_Column_List">
     id, role_id, login_name, login_password, salt, user_status, user_lock_time, last_login_time, 
     ts_id
@@ -22,10 +34,11 @@
     from bm_user
     where id = #{id,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from bm_user
+  <update id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update bm_user
+    set user_status ='DELETE',
     where id = #{id,jdbcType=VARCHAR}
-  </delete>
+  </update>
   <insert id="insert" parameterType="com.jmu.bibasedmanage.pojo.BmUser">
     insert into bm_user (id, role_id, login_name, 
       login_password, salt, user_status, 
@@ -149,17 +162,17 @@
     select bu.id as id,bu.login_name as loginName,bu.login_password as loginPassword,bu.salt as salt, bu.role_id as roleId,
     bu.ts_id as tsId, br.name as roleName, br.remark as roleRemark
     from bm_user bu left join bm_role br on bu.role_id=br.id
-    where bu.login_name=#{loginName}
+    where bu.login_name=#{loginName} and user_status = 'NORMAL'
   </select>
 
-  <select id="selectByPage" resultMap="BaseResultMap" parameterType="java.util.Map">
-    select
-    <include refid="Base_Column_List" />
-    from bm_user
-    where user_status = "NORMAL"
+  <select id="selectByPage" resultMap="Merge_BaseResultMap" parameterType="java.util.Map">
+    select bm_user.user_status,bm_user.user_lock_time,bm_user.ts_id,bm_user.salt,bm_user.role_id,
+    bm_user.login_password,bm_user.login_name,bm_user.id,bm_user.last_login_time,bm_role.remark as role_name
+    from bm_user LEFT JOIN  bm_role
+    on bm_user.role_id=bm_role.id
+    where 1=1 and user_status!='DELETED'
     <if test="keyword != null and keyword != ''">
       and login_name like concat("%", #{keyword}, "%")
     </if>
-    order by create_time desc
   </select>
 </mapper>

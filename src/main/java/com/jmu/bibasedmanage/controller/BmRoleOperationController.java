@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * Created by WJQ on 2018/1/8.
  */
 @Controller
-@RequestMapping("/roleOperation")
+@RequestMapping("/role-operation")
 public class BmRoleOperationController {
 
     @Autowired

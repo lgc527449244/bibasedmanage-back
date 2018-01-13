@@ -6,46 +6,22 @@
     #parse("/common/include.html")
 </head>
 <body>
-    <center>
-        <button type="button" class="layui-btn" id="uploadDemo">
-            <i class="layui-icon">&#xe67c;</i>下载模板
-        </button>
-        <input type="file" name="file" lay-type="file" lay-ext="xls" lay-title="请上传表格"
-               class="layui-upload-file" >
-        <div id="errorFile"></div>
-    </center>
+    <button type="button" class="layui-btn" id="test1">
+        <i class="layui-icon">&#xe67c;</i>上传图片
+    </button>
     <script>
         layui.use('upload', function(){
-            var layer = layui.layer;
-            var $ = layui.jquery;
-            $("#uploadDemo").on("click", function () {
-                window.location.href = Bm["path"] + "/excel/topic_demo.xls";
-            });
+            var upload = layui.upload;
 
-            layui.upload({
-                url:Bm["path"] + '/topic/excel-upload'
-                ,before: function(input){
-                    layer.load();
+            //执行实例
+            var uploadInst = upload.render({
+                elem: '#test1' //绑定元素
+                ,url: '/upload/' //上传接口
+                ,done: function(res){
+                    //上传完毕回调
                 }
-                ,success: function(res){
-                    layer.closeAll('loading'); //关闭loading
-                    console.log(res); //上传成功返回值，必须为json格式
-                    if(res.status == "SUCCESS"){
-                        console.log(res.result);
-                        if(res.result != null){
-                            $("#errorFile").html('<button type="button" class="layui-btn" id="down" _key="'+res.result+'">' +
-                                '<i class="layui-icon">&#xe67c;</i>上传失败，下载查看' +
-                                '</button>');
-
-                            $("#down").click(function () {
-                                window.location.href = Bm["path"] + "/file/down?fileName="+res.result
-                            });
-                        }else{
-                            $("#errorFile").html('上传成功');
-                        }
-
-//                        parent.layer.closeAll();//关闭该窗口
-                    }
+                ,error: function(){
+                    //请求异常回调
                 }
             });
         });

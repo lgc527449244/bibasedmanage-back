@@ -24,4 +24,8 @@
     <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
         <property name="securityManager" ref="securityManager"/>
     </bean>
+
+    <!-- 配置quartz -->
+    <!--<import resource="classpath:applicationContext-quartz.xml"/>-->
+
 </beans>

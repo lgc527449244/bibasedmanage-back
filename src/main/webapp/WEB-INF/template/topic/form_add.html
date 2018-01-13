@@ -18,7 +18,7 @@
 	<body>
 		<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
 			<ul class="layui-tab-title">
-				<li ><a href="${base}/student/list.html">课题信息列表</a></li>
+				  <li><a href="${base}/topic/list-teacher-topic.html">我的课题信息</a></li>
 				<li class="layui-this">添加课题信息</li>
 			</ul>
 			<div class="layui-tab-content"></div>
@@ -29,7 +29,7 @@
 				<!--<legend>响应式的表单集合</legend>-->
 			<!--</fieldset>-->
   <form class="layui-form">
-      <input type="hidden" name="teacherId"   value="2"  ></input>
+      <input type="hidden" name="teacherId"   value="${teacherId}"  ></input>
            <div class="layui-form-item">
         <div class="layui-inline">
             <label class="layui-form-label">题目</label>
@@ -40,7 +40,7 @@
         <div class="layui-inline">
             <label class="layui-form-label">人数限制</label>
             <div class="layui-input-inline">
-                <input type="text" name="studentNum" autocomplete="off"  placeholder="请输入人数限制" class="layui-input">
+                <input type="text" name="studentNum" autocomplete="off"  lay-verify="number" placeholder="请输入人数限制" class="layui-input">
             </div>
         </div>
        
@@ -49,15 +49,15 @@
     
        <div class="layui-inline">
             <label class="layui-form-label">要求</label>
-             <div class="layui-input-inline" > 
-                <input type="text" name="required"  lay-verify="required" autocomplete="off" placeholder="请输入基本要求" class="layui-input">
+             <div class="layui-input-inline" style="width:990px"> 
+               <textarea type="text" name="required"  lay-verify="required" autocomplete="off" placeholder="请输入基本要求" class="layui-textarea"></textarea>
           </div>
           </div>
         </div>
        <div class="layui-form-item layui-form-text">
 				<label class="layui-form-label">内容</label>
-				<div class="layui-input-block">
-					<textarea id="demo" name="content" lay-verify="content" class="layui-textarea layui-hide" ></textarea>
+				<div class="layui-input-block" style="width:1160px">
+					<textarea id="demo" name="content" lay-verify="content|required" class="layui-textarea layui-hide" ></textarea>
 				</div>
 			</div>
         <div class="layui-form-item">
@@ -76,7 +76,17 @@
 					layedit = layui.layedit,
 					laydate = layui.laydate;
 				    var $ = layui.jquery;
-				    var editIndex = layedit.build('demo');
+				    layedit.set({
+				    	  uploadImage: {
+				    	    url:Bm["path"]+'/file/uploadFile' //接口url
+				    	    ,type: '' //默认post
+				    	  }
+				    	});
+				    //创建一个编辑器
+			           var editIndex = layedit.build('demo',{
+			                   height:400
+			               }
+			           );
 				    
 				//自定义验证规则
 				form.verify({
@@ -88,6 +98,9 @@
 					pass: [/(.+){6,12}$/, '密码必须6到12位'],
 					content: function(value) {
 						layedit.sync(editIndex);
+						if(value.length >300) {
+							return '文本信息过长';
+						}
 					}
 				});
 
@@ -100,7 +113,7 @@
 					   if(ret.status == "SUCCESS"){
 					       layer.alert("提交成功");
 					       setTimeout(function () {
-							   window.location.href = Bm["path"] + "/topic/list.html";
+							   window.location.href = Bm["path"] + "/topic/list-teacher-topic.html";
                            },2000);
 					   }
 					});

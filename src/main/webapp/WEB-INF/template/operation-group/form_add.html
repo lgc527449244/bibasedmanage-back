@@ -18,8 +18,8 @@
 <body>
 <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
 	<ul class="layui-tab-title">
-		<li ><a href="${base}/operationGroup/list.html">操作组列表</a></li>
-		<li><a href="${base}/operationGroup/add.html">添加操作组</a></li>
+		<li ><a href="${base}/operation-group/list.html">操作组列表</a></li>
+		<li><a href="${base}/operation-group/add.html">添加操作组</a></li>
 	</ul>
 	<div class="layui-tab-content"></div>
 </div>
@@ -27,7 +27,7 @@
 <div style="margin: 15px;">
 	<!--<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">-->
 	<!--<legend>响应式的表单集合</legend>-->
-	<!--</fieldset>-->
+	<!--</fieldset>                改动1  operation-group-->
 
 	<form class="layui-form">
 		<div id="content">
@@ -90,11 +90,11 @@
 
 //          //监听提交
         form.on('submit(sub)', function(data) {
-            $.post(Bm["path"]+"/operationGroup/add", data.field, function(ret){
+            $.post(Bm["path"]+"/operation-group/add", data.field, function(ret){
                 if(ret.status == "SUCCESS"){
                     layer.alert("提交成功");
                     setTimeout(function () {
-                        window.location.href = Bm["path"] + "/operationGroup/list.html";
+                        window.location.href = Bm["path"] + "/operation-group/list.html";
                     },2000);
                 }
             });

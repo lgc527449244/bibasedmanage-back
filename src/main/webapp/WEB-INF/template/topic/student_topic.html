@@ -14,74 +14,126 @@
     #parse("/common/include.html")
     <link rel="stylesheet" href="${base}/static/css/table.css" />
 </head>
-
+   
 <body>
 <div class="admin-main">
 <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
     <ul class="layui-tab-title">
-        <li ><a href="${base}/topic/list-topic.html">课题信息列表</a></li>
+        <li ><a href="${base}/topic/choose-topic.html">课题信息列表</a></li>
         <li class="layui-this">个人课题信息</li>
     </ul>
     <div class="layui-tab-content"></div>
 </div>
-    <fieldset class="layui-elem-field">
-        <legend>数据列表</legend>
-        <div class="layui-field-box layui-form">
-            <input type="hidden" id="studentId" name="studentId" value="1"></input>
-            <table class="layui-table admin-table">
-                <thead>
-                <tr>
-            <!--        <th style="width: 30px;"><input type="checkbox" lay-filter="allselector" lay-skin="primary"></th>  -->
-                    <th>题目</th>
-                    <th>内容</th>
-                    <th>要求</th>
-                    <th>负责老师</th>
-                    <th>人数限制</th>
-                    <th>当前人数</th>
-                    <th>操作</th>
-                </tr>
-                <tbody id="content">
-                #if(${bmTopic}) 
-                <tr>
-                   <td>$bmTopic.name</td>
-                   <td>$bmTopic.content</td>
-                   <td>$bmTopic.required</td>
-                   <td>$bmTopic.bmTeacher.name</td>
-                   <td>$bmTopic.studentNum</td>
-                   <td id="currenNum">$bmTopic.studentNowNum</td>
-                   <td >
-                   <a id="option" href="javascript:;" data-id="$bmTopic.id" data-num="$bmTopic.studentNowNum" data-opt="isChoose" class="layui-btn layui-btn-warm layui-btn-mini">
+#if($bmtopic)
+<div style="margin: 15px;" id="content">
+    <!--<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">-->
+    <!--<legend>响应式的表单集合</legend>-->
+    <!--</fieldset>-->
+
+    <form class="layui-form">
+      <input type="hidden" name="id"  value="$!{bmtopic.id}"  ></input>
+           <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">题目</label>
+            <div class="layui-input-inline">
+                <input type="text" name="name"   value="$!{bmtopic.name}"  lay-verify="required" autocomplete="off" placeholder="请输入工号" class="layui-input"></input>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">人数限制</label>
+            <div class="layui-input-inline">
+                <input type="text" name="studentNum" value="$!{bmtopic.studentNum}" autocomplete="off" placeholder="最多可选人数" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">当前人数</label>
+            <div class="layui-input-inline">
+                <input  id="currenNum" type="text" name="studentNum" value="$!{bmtopic.studentNowNum}" autocomplete="off"  class="layui-input" placeholder="已选人数" ></input>
+            </div>
+        </div>
+          <div class="layui-inline">
+            <label class="layui-form-label">负责老师</label>
+            <div class="layui-input-inline">
+                <input type="text" id="chooseTeacher" name="bmTeacher.name" value="$!{bmtopic.bmTeacher.name}" lay-verify="required" autocomplete="off" placeholder="请输入姓名" class="layui-input">
+            </div>
+        </div>
+    </div>
+     <div class="layui-form-item ">
+       <div class="layui-inline">
+            <label class="layui-form-label">要求</label>
+             <div class="layui-input-inline"  style="width:900px"> 
+               <textarea name="required" value="$!{bmtopic.required}" lay-verify="required" autocomplete="off" placeholder="请输入相应的要求" class="layui-textarea">$!{bmtopic.required}</textarea>
+          </div>
+          </div>
+        
+        </div>
+       <div class="layui-form-item layui-form-text">
+				<label class="layui-form-label">内容</label>
+				  <div class="layui-input-inline"  style="width:900px"> 
+               <textarea name="content" value="$!{bmtopic.required}" lay-verify="required" autocomplete="off"  class="layui-textarea">$!{bmtopic.content}</textarea>
+                  </div>
+			</div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+            <a id="option" href="javascript:;" data-id="$bmtopic.id" data-num="$bmtopic.studentNowNum" data-opt="isChoose" class="layui-btn layui-btn-warm ">
                                                       取消
                   </a>
-        </td>
-    </tr>
-      #end
-          
-     
-      </tbody>
-            </table>
+            </div>
         </div>
-    </fieldset>
+    </form>
 </div>
-
+#else
+   <P style="color: red">您尚未有选课信息！</P>
+#end
 </body>
 <script>
     var disabled="true";
-  
-    layui.use(['jquery'], function() {
-        $= layui.jquery;
-        var student_id = $("#studentId").val();
+    layui.use(['form','jquery','layedit'], function() {
+    	var form = layui.form(),
+		layer = layui.layer,
+		layedit = layui.layedit,
+	    $ = layui.jquery;
+    	$('input').attr("readOnly",true); 
+    	$('textarea').attr("readOnly",true); 
+    //    var student_id = $("#studentId").val();
+       layedit.set({
+				    	  uploadImage: {
+				    	    url:Bm["path"]+'/file/uploadFile' //接口url
+				    	    ,type: '' //默认post
+				    	  }
+				    	});
+				    //创建一个编辑器
+			           var editIndex = layedit.build('demo',{
+			                   height:400
+			               }
+			           );
+			       	//自定义验证规则
+						form.verify({
+							title: function(value) {
+								if(value.length < 5) {
+									return '标题至少得5个字符啊';
+								}
+							},
+							pass: [/(.+){6,12}$/, '密码必须6到12位'],
+							content: function(value) {
+								layedit.sync(editIndex);
+							if(value.length >300) {
+								return '文本信息过长';
+							}
+							}
+						});
+		    
          $("#option").on('click', function() {
-             alert("hha"+$("#option").text().trim());
-                var currenNum =$("#currenNum").text();
-                alert(currenNum);
+          //   alert("hha"+$("#option").text().trim());
+                var currenNum =$("#currenNum").val();
+            //    alert(currenNum);
             	if(disabled=="true"){
             		disabled="false";
             	 if( $("#option").text().trim()=="选择"){
-            		 $.post(Bm["path"] + "/topic/choose-topic", {id:$(this).data('id'),studentId:student_id,choose:"Y"},function(ret){
+            		 $.post(Bm["path"] + "/topic/choose-topic", {id:$(this).data('id'),choose:"Y"},function(ret){
                          if(ret.status == "SUCCESS"){
                         	 currenNum=Number(currenNum)+1;
-                        	 $("#currenNum").text(currenNum);
+                        	 $("#currenNum").val(currenNum);
                         	 $("#option").text("取消");
                         	 disabled="true";
                          }
@@ -92,10 +144,10 @@
             		// window.location.href = Bm["path"] + "/?id=" + $(this).data('id')+"&status=DISENABLE";
             	 }
             	 else if( $("#option").text().trim()=="取消"){
-            		 $.post(Bm["path"] + "/topic/choose-topic", {id:$(this).data('id'),studentId:student_id,choose:"N"},function(ret){
+            		 $.post(Bm["path"] + "/topic/choose-topic", {id:$(this).data('id'),choose:"N"},function(ret){
                          if(ret.status == "SUCCESS"){
                         	   currenNum=Number(currenNum)-1;
-                              $("#currenNum").text(currenNum);
+                              $("#currenNum").val(currenNum);
                         	  $("#option").text("选择");
                         	  disabled="true";
                          }});

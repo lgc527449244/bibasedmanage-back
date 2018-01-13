@@ -15,5 +15,5 @@ public interface BmTopicTimeDao {
 
     int updateByPrimaryKey(BmTopicTime record);
     
-    BmTopicTime selectByUserId(String userId);
+    BmTopicTime selectByUserId();
 }

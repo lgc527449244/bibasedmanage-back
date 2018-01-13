@@ -101,9 +101,11 @@
         <td>
             <a href="javascript:;" data-id="{{ item.id }}" data-opt="edit" class="layui-btn layui-btn-mini">编辑</a>
             <a href="javascript:;" data-id="{{ item.id }}" data-type="{{ item.status == 'ENABLE' ? 'DISABLE' : 'ENABLE' }}" data-opt="operation" class="layui-btn layui-btn-mini">
-                {{ item.status == "ENABLE" ? "启用" : "停用" }}
+                {{ item.status == "ENABLE" ? "停用" : "启用" }}
             </a>
+            {{# if(item.status == "DISABLE") { }}
             <a href="javascript:;" data-id="{{ item.id }}" data-opt="del" class="layui-btn layui-btn-danger layui-btn-mini">删除</a>
+            {{# } }}
         </td>
     </tr>
     {{# }); }}

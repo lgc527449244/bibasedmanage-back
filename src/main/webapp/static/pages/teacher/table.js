@@ -1,6 +1,8 @@
 /**
  * Created by ljc on 2018/1/3.
  */
+  var teach_id ;
+   var teach_name;
 function Table(_data){
     layui.config({
         base: Bm["path"] + '/static/js/'
@@ -11,7 +13,8 @@ function Table(_data){
             layerTips = parent.layer === undefined ? layui.layer : parent.layer, //获取父窗口的layer对象
             layer = layui.layer, //获取当前窗口的layer对象
             form = layui.form();
-        paging.init({
+      
+          paging.init({
             openWait: true,
             url: Bm["path"] + '/teacher/list', //地址
             elem: '#content', //内容容器
@@ -20,7 +23,7 @@ function Table(_data){
             tempElem: '#tpl', //模块容器
             pageConfig: { //分页参数配置
                 elem: '#paged', //分页容器
-                pageSize: 2 //分页大小
+                pageSize: 5 //分页大小
             },
             success: function() { //渲染成功的回调
             },
@@ -43,6 +46,7 @@ function Table(_data){
                     	 if( $("[data-sid='"+ $(this).data('id')+"']").text().trim()=="启用"){
                     		 $.post(Bm["path"] + "/teacher/update", {id : $(this).data('id'),status:"DISENABLE"},function(ret){
                                  if(ret.status == "SUCCESS"){
+                                	 window.location.reload();
                                 	   $("[data-sid='"+ret.result.id+"']").text("停用");
                                 	   $that.children('td:last-child').children('a[data-opt=isStart]').text("启用");
                                  }});
@@ -51,6 +55,7 @@ function Table(_data){
                     	 else{
                     		 $.post(Bm["path"] + "/teacher/update", {id : $(this).data('id'),status:"ENABLE"},function(ret){
                                  if(ret.status == "SUCCESS"){
+                                	 window.location.reload();
                                 	  $("[data-sid='"+ ret.result.id+"']").text("启用");
                                 	  $that.children('td:last-child').children('a[data-opt=isStart]').text("停用");
                                  }});
@@ -58,7 +63,6 @@ function Table(_data){
                        
                     });
                 });
-              
                 //绑定所有删除按钮事件
                 $('#content').children('tr').each(function() {
                     var $that = $(this);
@@ -74,11 +78,12 @@ function Table(_data){
                                      type:"post",
                                      dataType:"json",
                                      success:function(data){
-                                         if(data.result==0)
-                                             layer.msg("删除失败",{time:1000});
-                                         if(data.result==1){
-                                             $("#tr-"+role_id).remove();
+                                         if(data.status=="SUCCESS"){
+                                        	 window.location.reload();
+                                        	 $("[data-rid='"+ teach_id+"']").remove();
                                              layer.msg("删除成功",{time:1000});
+                                         }else{
+                                         layer.msg("删除失败",{time:1000});
                                          }
                                      }
                                  });
@@ -91,6 +96,7 @@ function Table(_data){
                 });
             },
         });
+         
         //处理搜索表单提交
         form.on('submit(search)',function (data) {
             new Table(data.field);
@@ -110,13 +116,8 @@ function Table(_data){
             });
         });
     });
+  
 }
-
-function setStart(obj){
-	
-	
-	
-	}
 window.onload = function(){
     new Table();
 

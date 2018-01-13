@@ -35,7 +35,7 @@ function Table(_data){
                     });
 
                 });
-                //绑定所有删除按钮事件
+                //绑定所有删除按钮事件改过
                 $('#content').children('tr').each(function() {
                     var $that = $(this);
                     $that.children('td:last-child').children('a[data-opt=del]').on('click', function() {
@@ -44,23 +44,22 @@ function Table(_data){
                         layer.msg('你确定删除么？', {
                             time: 0 //不自动关闭
                             ,btn: ['确定', '取消']
-                            ,yes: function(data){
+                            ,yes: function(ret){
                                 $.post(Bm["path"]+"/role/delete", {'id':role_id}, function(ret){
                                     if(ret.status == "SUCCESS"){
+                                        setTimeout(function () {
+                                            $("#tr-"+role_id).remove();
+                                            layer.msg("删除成功",{time:1000});
+                                        },1000);
                                         //因为这里面的不知道为什么执行不了  所以只能吧页面的删除操作放在外面了,
                                     }
                                 });
-                                setTimeout(function () {
-                                    $("#tr-"+role_id).remove();
-                                    layer.msg("删除成功",{time:1000});
-                                },1000);
+
                                 //关闭弹窗
-                                layer.close(data);
+                                layer.close(ret);
                             }
                         });
-
                     });
-
                 });
             },
         });

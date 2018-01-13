@@ -113,11 +113,12 @@
 		 layedit.sync(editIndex);
 		 }
 		 });*/
-        $.post(Bm["path"] + "/operationGroup/get-all", {id : "111"}, function(ret){
+		//改过1  /operation-group
+        $.post(Bm["path"] + "/operation-group/get-all", {id : "111"}, function(ret){
             if(ret.status == "SUCCESS"){
                 // ; alert(JSON.stringify())
                 for(var i=0;i<ret.result.length;i++){
-                    $("#operationGroupId").append('<option value="'+ret.result[i].id+'" id="'+ret.result[i].id+'">'+ret.result[i].name+'</option>')
+                    $("#operationGroupId").append('<option value="'+ret.result[i].id+'" id="'+ret.result[i].id+'">'+ret.result[i].remark+'</option>')
 
                 }
 				/* $ ("#operationGroupId option" ). each( function () {

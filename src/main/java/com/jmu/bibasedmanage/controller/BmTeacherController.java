@@ -19,6 +19,7 @@ import com.jmu.bibasedmanage.pojo.BmTeacherGroup;
 import com.jmu.bibasedmanage.pojo.BmTopic;
 import com.jmu.bibasedmanage.service.TeacherService;
 import com.jmu.bibasedmanage.util.ResponseUtil;
+import com.jmu.bibasedmanage.util.SecurityUtils;
 import com.jmu.bibasedmanage.vo.JsonResponse;
 import com.jmu.bibasedmanage.vo.Page;
 
@@ -61,6 +62,7 @@ public class BmTeacherController {
 	/**
 	 * 添加答辩的评价和评分
 	 * 
+	 * @param studentId
 	 * @return Created by hhq on 2018-1-2.
 	 */
 	@RequestMapping("/save-answer")
@@ -72,7 +74,19 @@ public class BmTeacherController {
 		teacherService.saveAnswerInfo(studentId, answerEvaluate, answerScore);
 		return ResponseUtil.success();
 	}
-	
+	   @RequestMapping(value = "/teacher-info.html")
+	    public ModelAndView getinfo(String id){
+		   ModelAndView modelAndView = new ModelAndView("/teacher/teacher_info.html");
+		   if(SecurityUtils.getCurrentUser().getRoleName().equals("admin")){
+			   modelAndView.addObject("id",id);  //当前要查询个人id
+			  
+		   }
+		   else{
+			   modelAndView.addObject("id", SecurityUtils.getCurrentUser().getTsId());  //当前登入的用户对应个人id
+		   }
+		   return modelAndView;
+           
+	    }
 	 @RequestMapping(value = "/get", method = RequestMethod.POST)
 	    @ResponseBody
 	    public JsonResponse get(String id){
@@ -96,6 +110,7 @@ public class BmTeacherController {
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	@ResponseBody
 	public JsonResponse delete(String id) {
 		teacherService.delete(id);
 		return ResponseUtil.success();
@@ -119,11 +134,19 @@ public class BmTeacherController {
 	@RequestMapping("/seacher-teacher")
 	public ModelAndView searchTopic(String teacherInfo) {
 		List<BmTeacher> BmTeachers = teacherService.selectByLike(teacherInfo);
-		ModelAndView modelAndView = new ModelAndView("/test3.html");
+		ModelAndView modelAndView = new ModelAndView("/teacher_list.html");
 		modelAndView.addObject("BmTeachers", BmTeachers);
 		return modelAndView;
 	}
-	 
+	/**
+	 * 弹框选择教师
+	 * @return
+	 * Created by hhq on 2018-1-9.
+	 */
+	@RequestMapping(value = "/choose_list.html", method = RequestMethod.GET)
+    public ModelAndView chooseList(){
+        return new ModelAndView("teacher/teacher_list.html");
+    }
 	@RequestMapping(value = "/list.html", method = RequestMethod.GET)
 	    public ModelAndView list(){
 	        return new ModelAndView("teacher/table.html");

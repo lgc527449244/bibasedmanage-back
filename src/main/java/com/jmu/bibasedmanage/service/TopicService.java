@@ -8,8 +8,6 @@ import com.jmu.bibasedmanage.pojo.BmTeacher;
 import com.jmu.bibasedmanage.pojo.BmTopic;
 import com.jmu.bibasedmanage.vo.Page;
 
-import javax.servlet.http.HttpServletRequest;
-
 public interface TopicService {
 	public List<BmTopic> selectByLike(String topicInfo);
 	public void addTopic(BmTopic bmTopic);
@@ -25,7 +23,6 @@ public interface TopicService {
     Page<BmTopic> list(Map map, Page<BmTopic> page);
     public BmTopic selectTopAndteacherById(String id);
 	public BmTopic selectByStudentId(String StudentId);
-
-	String importExcel(HttpServletRequest request);
+	public boolean  deleteBmTopic(String id);
 
 }

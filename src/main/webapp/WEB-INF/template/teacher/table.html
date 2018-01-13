@@ -16,9 +16,15 @@
     <script type="text/javascript" src="${base}/static/pages/teacher/table.js"></script>
 </head>
 
-<body>
-<div class="admin-main">
+<body><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+			<ul class="layui-tab-title">
+                   <li class="layui-this"> 教师信息列表</a></li>
+                 <li ><a href="${base}/teacher/add.html">添加教师</a></li>
+             </ul>
+			<div class="layui-tab-content"></div>
+		</div>
 
+<div class="admin-main">
    <blockquote class="layui-elem-quote">
         <div class="layui-inline">
             <form class="layui-form" action="" style="height: 10px">
@@ -40,7 +46,6 @@
         </div>
     </blockquote>
     <fieldset class="layui-elem-field">
-        <!--<legend>数据列表</legend>-->
         <div class="layui-field-box layui-form">
             <table class="layui-table admin-table">
                 <thead>
@@ -69,7 +74,7 @@
 <!--模板-->
 <script type="text/html" id="tpl">
     {{# layui.each(d.result.result, function(index, item){ }}
-    <tr>
+    <tr data-rid="{{ item.id }}">
         <td>{{ item.jobNumber||'' }}</td>
         <td>{{ item.college||'' }}</td>
         <td>{{ item.jobTitle||'' }}</td>
@@ -82,15 +87,19 @@
             {{# } }}
         </td>
          <td id="option">
+             {{# if(item.status == "DISENABLE"||''){ }}
             <a href="javascript:;"  data-id="{{ item.id }}" data-opt="edit" class="layui-btn layui-btn-mini">编辑</a>
+             {{# }}} 
              <a href="javascript:;" data-id="{{ item.id }}" data-status="{{ item.status }}" data-opt="isStart" class="layui-btn layui-btn-warm layui-btn-mini">
              {{# if(item.status == "ENABLE"){ }}
                                      停用                      
             {{# } else {}}
                                      启用
                 {{# }}} </a>
+            {{# if(item.status == "DISENABLE"||''){ }}
             <a href="javascript:;" data-id="{{ item.id }}" data-opt="del" class="layui-btn layui-btn-danger layui-btn-mini">删除</a>
-        </td>
+          {{# }}} 
+  </td>
     </tr>
     {{# }); }}
 </script>

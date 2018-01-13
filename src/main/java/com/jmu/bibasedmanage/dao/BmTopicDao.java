@@ -6,9 +6,7 @@ import java.util.Map;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.jmu.bibasedmanage.pojo.BmTeacher;
 import com.jmu.bibasedmanage.pojo.BmTopic;
-import org.springframework.stereotype.Component;
 
-@Component
 public interface BmTopicDao {
     int deleteByPrimaryKey(String id);
 

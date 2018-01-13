@@ -1,6 +1,7 @@
 package com.jmu.bibasedmanage.controller;
 
 import com.jmu.bibasedmanage.pojo.BmUser;
+import com.jmu.bibasedmanage.pojo.BmUserMerge;
 import com.jmu.bibasedmanage.service.UserService;
 import com.jmu.bibasedmanage.util.ResponseUtil;
 import com.jmu.bibasedmanage.util.SecurityUtils;
@@ -42,9 +43,10 @@ public class BmUserController {
      * @param page
      * @return
      */
+    //gaigu改过BmUserMerge
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse listData(@RequestParam Map<String, Object> map, Page<BmUser> page){
+    public JsonResponse listData(@RequestParam Map<String, Object> map, Page<BmUserMerge> page){
         return ResponseUtil.success(userService.list(map, page));
     }
 
@@ -52,6 +54,16 @@ public class BmUserController {
     public ModelAndView add(){
         return new ModelAndView("user/form_add.html");
     }
+    //改过
+    @RequestMapping(value = "/student-information.html", method = RequestMethod.GET)
+    public ModelAndView student_information(){
+        return new ModelAndView("user/student_information.html");
+    }
+    @RequestMapping(value = "/teacher-information.html", method = RequestMethod.GET)
+    public ModelAndView teacher_information(){
+        return new ModelAndView("user/teacher_information.html");
+    }
+
 
     @RequestMapping(value = "/get", method = RequestMethod.POST)
     @ResponseBody
@@ -76,15 +88,11 @@ public class BmUserController {
         userService.update(bmUser);
         return ResponseUtil.success();
     }
+    //改过
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
+    @ResponseBody
     public JsonResponse delete(String id){
         userService.delete(id);
         return ResponseUtil.success();
     }
-
-    @RequestMapping(value = "excel-upload.html")
-    public ModelAndView excelUpload(){
-        return new ModelAndView("/user/excel_upload.html");
-    }
-
 }

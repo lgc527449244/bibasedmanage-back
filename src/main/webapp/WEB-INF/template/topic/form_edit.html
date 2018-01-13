@@ -18,7 +18,7 @@
 <body>
 <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
     <ul class="layui-tab-title">
-        <li ><a href="${base}/topit/list.html">课题信息列表</a></li>
+        <li><a href="${base}/topic/list-teacher-topic.html">我的课题信息</a></li>
         <li><a href="${base}/topic/add.html">添加课题信息</a></li>
         <li class="layui-this">修改课题信息</li>
     </ul>
@@ -36,36 +36,36 @@
         <div class="layui-inline">
             <label class="layui-form-label">题目</label>
             <div class="layui-input-inline">
-                <input type="text" name="name"   value="$bmtopic.name"  lay-verify="required" autocomplete="off" placeholder="请输入工号" class="layui-input"></input>
+                <input type="text" name="name"   value="$!{bmtopic.name}"  lay-verify="required" autocomplete="off" placeholder="请输入工号" class="layui-input"></input>
             </div>
         </div>
         <div class="layui-inline">
             <label class="layui-form-label">人数限制</label>
             <div class="layui-input-inline">
-                <input type="text" name="studentNum" value="$bmtopic.studentNum" autocomplete="off" class="layui-input">
+                <input type="text" name="studentNum" value="$!{bmtopic.studentNum}" lay-verify="number" autocomplete="off" class="layui-input">
             </div>
         </div>
-       
+         <div class="layui-inline">
+            <label class="layui-form-label">负责老师</label>
+            <div class="layui-input-inline">
+                <input type="text" name="bmTeacher.name" value="$!{bmtopic.bmTeacher.name}" lay-verify="required" autocomplete="off" placeholder="请输入姓名" class="layui-input">
+            </div>
+        </div>
     </div>
      <div class="layui-form-item">
     
        <div class="layui-inline">
             <label class="layui-form-label">要求</label>
-             <div class="layui-input-inline" > 
-                <input type="text" name="required" value="$bmtopic.required" lay-verify="required" autocomplete="off" placeholder="请输入姓名" class="layui-input">
+             <div class="layui-input-inline" style="width:990px"> 
+                <textarea type="text" name="required" value="$!{bmtopic.required}" lay-verify="required" autocomplete="off" placeholder="请输入要求" class="layui-textarea">$!{bmtopic.required}</textarea>
           </div>
           </div>
-           <div class="layui-inline">
-            <label class="layui-form-label">负责老师</label>
-            <div class="layui-input-inline">
-                <input type="text" name="bmTeacher.name" value="$bmtopic.bmTeacher.name" lay-verify="required" autocomplete="off" placeholder="请输入姓名" class="layui-input">
-            </div>
-        </div>
+         
         </div>
        <div class="layui-form-item layui-form-text">
-				<label class="layui-form-label">编辑器</label>
-				<div class="layui-input-block">
-					<textarea id="demo" name="content"  lay-verify="content" class="layui-textarea layui-hide" >$bmtopic.content</textarea>
+				<label class="layui-form-label">内容</label>
+				<div class="layui-input-block" style="width:1160px">
+					<textarea id="demo" name="content"  lay-verify="content" class="layui-textarea layui-hide" >$!{bmtopic.content}</textarea>
 				</div>
 			</div>
         <div class="layui-form-item">
@@ -84,7 +84,17 @@
             laydate = layui.laydate,
             laytpl = layui.laytpl,
             $ = layui.jquery;
-            var editIndex =  layedit.build('demo'); //建立编辑器
+        layedit.set({
+	    	  uploadImage: {
+	    	    url:Bm["path"]+'/file/uploadFile' //接口url
+	    	    ,type: '' //默认post
+	    	  }
+	    	});
+	    //创建一个编辑器
+         var editIndex = layedit.build('demo',{
+                 height:400
+             }
+         );
     /*    $.post(Bm["path"] + "/topic/get", {id : "${id}"}, function(ret){
             if(ret.status == "SUCCESS"){
                 var _data = ret.result;
@@ -109,6 +119,9 @@
             pass: [/(.+){6,12}$/, '密码必须6到12位'],
             content: function(value) {
                 layedit.sync(editIndex);
+                if(value.length >300) {
+					return '文本信息过长';
+				}
             }
         });
 
@@ -118,7 +131,7 @@
                 if(ret.status == "SUCCESS"){
                     layer.alert("提交成功");
                     setTimeout(function () {
-                        window.location.href = Bm["path"] + "/topic/list-teachertopic.html";
+                        window.location.href = Bm["path"] + "/topic/list-teacher-topic.html";
                     },2000);
                 }
             });

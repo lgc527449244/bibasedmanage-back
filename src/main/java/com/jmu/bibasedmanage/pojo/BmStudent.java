@@ -43,6 +43,8 @@ public class BmStudent {
 
     private String dataSources;
 
+    private Integer isBind;
+
     public String getId() {
         return id;
     }
@@ -202,5 +204,13 @@ public class BmStudent {
 
     public void setDataSources(String dataSources) {
         this.dataSources = dataSources;
+    }
+
+    public Integer getIsBind() {
+        return isBind;
+    }
+
+    public void setIsBind(Integer isBind) {
+        this.isBind = isBind;
     }
 }

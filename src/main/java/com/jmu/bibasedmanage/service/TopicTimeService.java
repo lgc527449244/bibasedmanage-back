@@ -10,4 +10,5 @@ public interface TopicTimeService {
 	
 	BmTopicTime seacherTime(String userId);
     
+    int isTimeOut(String state);
 }

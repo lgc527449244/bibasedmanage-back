@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>学生信息管理</title>
+    <title>用户信息管理</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -40,11 +40,8 @@
                 </div>
             </form>
         </div>
-        <div class="layui-inline" style="float: right">
-            <a href="#" class="layui-btn layui-btn-small" id="import" style="float: right">
-                <i class="layui-icon">&#xe608;</i> 导入信息
-            </a>
-        </div>
+
+
     </blockquote>
     <fieldset class="layui-elem-field">
         <!--<legend>数据列表</legend>-->
@@ -52,13 +49,14 @@
             <table class="layui-table admin-table">
                 <thead>
                <tr>
-                    <th>用户名</th>
-                    <th>密码</th>
+                    <th>登录名</th>
                     <th>对应角色</th>
                     <th>状态</th>
+                   <th>操作</th>
                 </tr>
                 </thead>
                 <tbody id="content">
+
                 </tbody>
             </table>
         </div>
@@ -72,19 +70,21 @@
 <!--模板-->
 <script type="text/html" id="tpl">
     {{# layui.each(d.result.result, function(index, item){ }}
-    <tr>
+    <tr id="{{ item.id }}">
         <td>{{ item.loginName||'' }}</td>
-        <td>{{ item.loginPassword||'' }}</td>
-        <td>{{ item.roleId||'' }}</td>
-        
+        <td>{{ item.roleName||'' }}</td>
         <td>
-            {{# if(item.status != null){ }}
-                {{ item.status == "ENABLE" ? "激活" : "未激活" }}
+            {{# if(item.userStatus != null){ }}
+                {{ item.userStatus == "ENABLE" ? "启用" : "未启用" }}
             {{# } }}
         </td>
         <td>
-            <a href="javascript:;" data-id="{{ item.id }}" data-opt="edit" class="layui-btn layui-btn-mini">编辑</a>
-            <a href="javascript:;" data-id="{{ item.id }}" data-opt="del" class="layui-btn layui-btn-danger layui-btn-mini">删除</a>
+
+            <a href="javascript:;"  data-id="{{ item.id }}" data-opt="edit" class="layui-btn layui-btn-mini">编辑</a>
+            <a href="javascript:;"  data-id="{{ item.id }}" data-opt="del" class="layui-btn layui-btn-danger layui-btn-mini">删除</a>
+            {{# if(item.roleName != "管理员"){ }}
+                <a href="javascript:;" data-id="{{ item.id }}" id="{{ item.roleName||'' }}" data-opt="check" class="layui-btn layui-btn-mini">个人信息</a>
+            {{# } }}
         </td>
     </tr>
     {{# }); }}

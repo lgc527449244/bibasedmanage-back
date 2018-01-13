@@ -27,6 +27,8 @@ public class BmTeacher {
 
     private String recordStatus;
 
+    private Integer isBind;
+
     public String getId() {
         return id;
     }
@@ -121,5 +123,13 @@ public class BmTeacher {
 
     public void setRecordStatus(String recordStatus) {
         this.recordStatus = recordStatus == null ? null : recordStatus.trim();
+    }
+
+    public Integer getIsBind() {
+        return isBind;
+    }
+
+    public void setIsBind(Integer isBind) {
+        this.isBind = isBind;
     }
 }

@@ -19,7 +19,7 @@
     </association>
   </resultMap>
   <sql id="Base_Column_List">
-    id as pid, teacher_id, name as pname, content, required, student_num, student_now_num, status, create_time, 
+    id as pid, teacher_id, name as pname, content, required, student_num, student_now_num, status as pstatus, create_time, 
     update_time, record_status
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -37,29 +37,23 @@
   	     p.status as pstatus,
   	     content, required, student_num, student_now_num
   	    from bm_topic p left join bm_teacher t on t.id=p.teacher_id
-  	    where 1=1
+  	    where p.record_status = "NORMAL"
   	  <if test="tId != null and tId != ''">
         AND p.teacher_id= #{tId,jdbcType=VARCHAR}
       </if>
+      <if test="sId != null and sId != ''">
+        AND p.status= "ENABLE"
+      </if>
   	   <if test="keyword != null and keyword != ''">
-        AND p.name LIKE concat(concat('%',#{keyword}),'%')
-         or 
-         <if test="tId != null and tId != ''">
-         p.teacher_id= #{tId,jdbcType=VARCHAR} and
-      </if>
-         t.name LIKE concat(concat('%',#{keyword}),'%')
-        or
-           <if test="tId != null and tId != ''">
-         p.teacher_id= #{tId,jdbcType=VARCHAR} and
-      </if> content LIKE concat(concat('%',#{keyword}),'%') or
-          <if test="tId != null and tId != ''">
-         p.teacher_id= #{tId,jdbcType=VARCHAR} and
-      </if> required LIKE concat(concat('%',#{keyword}),'%')
-      </if>
+        AND (p.name LIKE concat("%", #{keyword}, "%")
+         or t.name LIKE concat("%", #{keyword}, "%")
+         or content LIKE concat("%", #{keyword}, "%")
+         or required LIKE concat("%", #{keyword}, "%"))
+       </if>
+   
       <if test="topicId != null and topicId != ''">
         AND p.id= #{topicId,jdbcType=VARCHAR}
       </if>
-     
        order by p.create_time
   </select>
   <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">

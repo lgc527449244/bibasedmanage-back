@@ -85,4 +85,10 @@ public class BmRoleController {
         return ResponseUtil.success();
     }
 
+    @RequestMapping(value = "/get-all", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse getAll(){
+        //改过1
+        return ResponseUtil.success(roleService.selectAll());
+    }
 }

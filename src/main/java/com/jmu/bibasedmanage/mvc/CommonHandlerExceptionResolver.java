@@ -11,12 +11,6 @@ import org.springframework.web.servlet.view.json.MappingJacksonJsonView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * 系统统一异常处理，对于ajax请求自动转成json格式数据，并保持与JsonResponse数据结构一致
- * 
- * @author 刘俊杰
- * 
- */
 public class CommonHandlerExceptionResolver extends SimpleMappingExceptionResolver {
 
 	public final static int RESPONSE_TYPE_JSON = 0;

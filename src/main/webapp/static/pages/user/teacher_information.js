@@ -1,6 +1,9 @@
 /**
  * Created by ljc on 2018/1/3.
  */
+var vcollege;
+var vname;
+var vid;
 function Table(_data){
     layui.config({
         base: Bm["path"] + '/static/js/'
@@ -13,7 +16,7 @@ function Table(_data){
             form = layui.form();
         paging.init({
             openWait: true,
-            url: Bm["path"] + '/operationGroup/list', //地址
+            url: Bm["path"] + '/teacher/list?isBind=1', //地址
             elem: '#content', //内容容器
             params: _data,
             type: 'POST',
@@ -30,37 +33,43 @@ function Table(_data){
                 //绑定所有编辑按钮事件
                 $('#content').children('tr').each(function() {
                     var $that = $(this);
-                    $that.children('td:last-child').children('a[data-opt=edit]').on('click', function() {
-                        window.location.href = Bm["path"] + "/operationGroup/update.html?id=" + $(this).data('id');
+                    $that.children('td:last-child').children('a[data-opt=edit]').on('click', function () {
+                        vname=$that.find('td').eq(3).text();
+                        vcollege=$that.find('td').eq(1).text();
+                        $("#user_name").val(vname);
+                        $("#college").val(vcollege);
+                        vid=$that.attr("class");
                     });
 
                 });
+              
                 //绑定所有删除按钮事件
                 $('#content').children('tr').each(function() {
                     var $that = $(this);
                     $that.children('td:last-child').children('a[data-opt=del]').on('click', function() {
-                        // layer.msg($(this).data('name'));
-                        operationGroup_id=$(this).data('id');
-                        layer.msg('你确定删除么？', {
-                            time: 0 //不自动关闭
-                            ,btn: ['确定', '取消']
-                            ,yes: function(data){
-                                $.post(Bm["path"]+"/operationGroup/delete", {'id':operationGroup_id}, function(ret){
-                                    if(ret.status == "SUCCESS"){
-
-                                        //因为这里面的不知道为什么执行不了  所以只能吧页面的删除操作放在外面了,错误是因为明明删除了，却显示路径不再
-                                    }
-                                });
-
-                                setTimeout(function () {
-                                    $("#tr-"+operationGroup_id).remove();
-                                    layer.msg("删除成功",{time:1000});
-                                },1000);
-                                //关闭弹窗
-                                layer.close(data);
-                            }
-                        });
-
+                    	 var teach_id =$(this).data('id');
+                         layer.msg('你确定删除么？', {
+                             time: 0 //不自动关闭
+                             ,btn: ['确定', '取消']
+                             ,yes: function(){
+                                 $.ajax({
+                                     url:Bm["path"] +"/teacher/delete",
+                                     data:{'id':teach_id},
+                                     type:"post",
+                                     dataType:"json",
+                                     success:function(data){
+                                         if(data.result==0)
+                                             layer.msg("删除失败",{time:1000});
+                                         if(data.result==1){
+                                             $("#tr-"+role_id).remove();
+                                             layer.msg("删除成功",{time:1000});
+                                         }
+                                     }
+                                 });
+                                 //关闭弹窗
+                                 layer.close();
+                             }
+                         });
                     });
 
                 });
@@ -77,16 +86,27 @@ function Table(_data){
                 title: '导入信息',
                 maxmin: false,
                 type: 2,
-                content: Bm["path"] + '/role/excel-upload.html',
+                content: Bm["path"] + '/student/excel-upload.html',
                 area: ['300px', '200px']
             });
         });
     });
 }
 
+function setStart(obj){
 
+
+
+	}
 window.onload = function(){
     new Table();
 
 }
-
+var callbackdata = function () {
+    var data = {
+        vname:vname,
+        vcollege:vcollege,
+        vid:vid,
+    };
+    return data;
+};

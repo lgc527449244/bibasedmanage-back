@@ -42,51 +42,53 @@ public class RoleServiceImpl implements RoleService{
         return page;
     }
 
-   public String add(BmRole bmRole,Map<String,Object> map){
+    public String add(BmRole bmRole,Map<String,Object> map){
         String id = UUIDUtils.generator();
         bmRole.setId(id);
-       int i = 0;
-       System.out.println(JSON.toJSONString(map)+"=="+map.size());
-       List<Map<String,Object>> list = new ArrayList<Map<String, Object>>();
-       for (String key : map.keySet()) {
-           if(key.equals("operation"+i))
-           {
-               String roleOperationid = UUIDUtils.generator();
-               Map<String,Object> maps = new HashedMap();
-               maps.put("id",roleOperationid);
-               maps.put("roleId",id);
-               maps.put("operationId",map.get(key));
-               System.out.println("key= "+ key + " and value= " + map.get(key));
-               i++;
-               list.add(maps);
-           }
-       }
-       roleOperationDao.insertList(list);
-        bmRoleDao.insertSelective(bmRole);
-        return id;
-    }
-
-    public void update(BmRole bmRole,Map<String,Object> map) {
-       //先全部删除再添加
-        roleOperationDao.deleteByRole(bmRole.getId());
         int i = 0;
         System.out.println(JSON.toJSONString(map)+"=="+map.size());
         List<Map<String,Object>> list = new ArrayList<Map<String, Object>>();
         for (String key : map.keySet()) {
-            if(key.equals("operation"+i)){
+            if(key.contains("operation"))
+            {
+                String roleOperationid = UUIDUtils.generator();
+                Map<String,Object> maps = new HashedMap();
+                maps.put("id",roleOperationid);
+                maps.put("roleId",id);
+                maps.put("operationId",map.get(key));
+                System.out.println("key= "+ key + " and value= " + map.get(key));
+                list.add(maps);
+                i=1;
+            }
+        }
+        if(i!=0) roleOperationDao.insertList(list);
+        bmRoleDao.insertSelective(bmRole);
+        return id;
+    }
+
+
+    public void update(BmRole bmRole,Map<String,Object> map) {
+        //先全部删除再添加
+        roleOperationDao.deleteByRole(bmRole.getId());
+        System.out.println(JSON.toJSONString(map)+"=="+map.size());
+        List<Map<String,Object>> list = new ArrayList<Map<String, Object>>();
+        int i = 0;
+        for (String key : map.keySet()) {
+            if(key.contains("operation"))
+            {
                 String roleOperationid = UUIDUtils.generator();
                 Map<String,Object> maps = new HashedMap();
                 maps.put("id",roleOperationid);
                 maps.put("roleId",bmRole.getId());
                 maps.put("operationId",map.get(key));
-                System.out.println("key= "+ key + " and value= " + map.get(key));
-                i++;
                 list.add(maps);
+                i=1;
             }
         }
-        roleOperationDao.insertList(list);
-       bmRoleDao.updateByPrimaryKeySelective(bmRole);
+        if(i!=0) roleOperationDao.insertList(list);
+        bmRoleDao.updateByPrimaryKeySelective(bmRole);
     }
+
 
     public void delete(String id) {
         bmRoleDao.deleteByPrimaryKey(id);
@@ -95,4 +97,9 @@ public class RoleServiceImpl implements RoleService{
     public BmRole selectById(String roleId) {
         return bmRoleDao.selectByPrimaryKey(roleId);
     }
+
+    public List<BmRole> selectAll() {
+        return bmRoleDao.selectAll();
+    }
+
 }

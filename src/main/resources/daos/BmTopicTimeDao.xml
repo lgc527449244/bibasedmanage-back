@@ -21,7 +21,6 @@
     select 
     <include refid="Base_Column_List" />
     from bm_topic_time
-    where user_id = #{userId,jdbcType=VARCHAR}
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">

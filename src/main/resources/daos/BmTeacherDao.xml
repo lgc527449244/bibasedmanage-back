@@ -29,10 +29,10 @@
   	 select 
   	   <include refid="Base_Column_List" />
   	    from bm_teacher 
-  	    where 1=1
+  	    where record_status = "NORMAL"
   	   <if test="keyword != null and keyword != ''">
         AND name LIKE concat(concat('%',#{keyword}),'%') or college LIKE concat(concat('%',#{keyword}),'%')
-        or job_title LIKE concat(concat('%',#{keyword}),'%')
+        or job_title LIKE concat(concat('%',#{keyword}),'%') or job_number LIKE concat(concat('%',#{keyword}),'%') 
       </if>
        order by create_time
   </select>
@@ -167,6 +167,9 @@
       </if>
       <if test="recordStatus != null">
         record_status = #{recordStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="isBind!= null">
+        is_bind = #{isBind,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}

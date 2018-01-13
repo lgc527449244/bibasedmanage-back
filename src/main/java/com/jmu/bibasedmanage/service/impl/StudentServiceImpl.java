@@ -13,6 +13,7 @@ import com.jmu.bibasedmanage.service.StudentService;
 import com.jmu.bibasedmanage.util.FileUtils;
 import com.jmu.bibasedmanage.util.UUIDUtils;
 import com.jmu.bibasedmanage.vo.Page;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -100,10 +101,31 @@ public class StudentServiceImpl implements StudentService{
                     }
                     //数据校验
                     StringBuffer errMsg = new StringBuffer();
-                    BmStudent oldStudent = bmStudentDao.selectByStudentId(studentId);
-                    if(oldStudent != null){
-                        errMsg.append("该学号的学生已存在；");
+
+                    if(StringUtils.isBlank(name)){
+                        errMsg.append("姓名不能为空；");
                     }
+                    if(StringUtils.isBlank(grade)){
+                        errMsg.append("年级不能为空；");
+                    }
+                    if(StringUtils.isBlank(college)){
+                        errMsg.append("学院不能为空；");
+                    }
+                    if(StringUtils.isBlank(major)){
+                        errMsg.append("专业不能为空；");
+                    }
+                    if(StringUtils.isBlank(classes)){
+                        errMsg.append("班级不能为空；");
+                    }
+                    if(StringUtils.isBlank(major)){
+                        errMsg.append("学号不能为空；");
+                    }else{
+                        BmStudent oldStudent = bmStudentDao.selectByStudentId(studentId);
+                        if(oldStudent != null){
+                            errMsg.append("该学号的学生已存在；");
+                        }
+                    }
+
 
                     if(errMsg.length() > 0){
                         return errMsg.toString();

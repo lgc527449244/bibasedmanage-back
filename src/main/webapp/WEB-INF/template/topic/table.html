@@ -14,12 +14,19 @@
     #parse("/common/include.html")
     <link rel="stylesheet" href="${base}/static/css/table.css" />
     <script type="text/javascript" src="${base}/static/pages/topic/table.js"></script>
-
 </head>
 
 <body>
 <div class="admin-main">
-
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+    <ul class="layui-tab-title">
+       <ul class="layui-tab-title">
+				<li class="layui-this">课题信息列表</a></li>
+				<li ><a href="${base}/topic/admin-add.html">添加课题</a></li>
+			</ul>
+    </ul>
+    <div class="layui-tab-content"></div>
+</div>
    <blockquote class="layui-elem-quote">
         <div class="layui-inline">
             <form class="layui-form" action="" style="height: 10px">
@@ -35,11 +42,13 @@
                 </div>
             </form>
         </div>
+         <div class="layui-inline" style="float: right">
+            <a href="#" class="layui-btn layui-btn-small" id="import" style="float: right">
+                <i class="layui-icon">&#xe608;</i> 导入信息
+            </a>
+        </div>
           <div class="layui-inline">
-            <form class="layui-form" action="" style="height: 10px">
-                <input type="hidden" id="userId" name="userId" value="1"></input>
-                
-                       #if(${bmTopictime}) 
+            #if(${bmTopictime}) 
                         #set($flag="update")
                         #set($start =$!date.format('yyyy-MM-dd HH:mm:ss',$bmTopictime.beginTime))
                         #set( $end =$!date.format('yyyy-MM-dd HH:mm:ss',$bmTopictime.endTime))
@@ -49,7 +58,9 @@
                        #set($flag = "add")
                         #end
                      <input type="hidden" id="flag" name="flag" value="$flag"></input>
-                     <input type="hidden"  name="id" value="$bmTopictime.id"></input>
+            <form class="layui-form" action="" style="height: 10px">
+            <!-- 测试使用的用户id  <input type="hidden" id="userId" name="userId" value="1"></input> --> 
+               <input type="hidden"  name="id" value="$bmTopictime.id"></input> 
                      <div class="layui-form-item" style="margin:0;">
                     <label class="layui-form-label">开始时间：</label>
                      <div class="layui-input-inline">
@@ -59,20 +70,17 @@
                     <div class="layui-input-inline">
                         <input type="text" id="endTime" name="endTime" value="$end" placeholder="输入结束选课时间" autocomplete="off" class="layui-input"></input>
                     </div>
+                    
                     <div class="layui-form-mid layui-word-aux" style="padding:0;">
                         <button lay-filter="apply" class="layui-btn" lay-submit><i class="fa fa-search" aria-hidden="true"></i> 发布</button>
                     </div>
                 </div>
+                    
             </form>
         </div>
-        <div class="layui-inline" style="float: right">
-            <a href="#" class="layui-btn layui-btn-small" id="import" style="float: right">
-                <i class="layui-icon">&#xe608;</i> 导入信息
-            </a>
-        </div>
+       
     </blockquote>
     <fieldset class="layui-elem-field">
-        <legend>数据列表</legend>
         <div class="layui-field-box layui-form">
             <table class="layui-table admin-table">
                 <thead>
@@ -101,15 +109,15 @@
 <!--模板-->
 <script type="text/html" id="tpl">
     {{# layui.each(d.result.result, function(index, item){ }}
-    <tr>
+    <tr data-rid="{{ item.id }}" >
         <td>{{ item.name||'' }}</td>
         <td>{{ item.content||'' }}</td>
         <td>{{ item.required||'' }}</td>
-        {{# if(item.bmTeacher != null){ }}
+          {{# if(item.bmTeacher != null){ }}
         <td>{{ item.bmTeacher.name||'' }}</td>
-            {{# } else{ }}
+           {{# } else{ }}
         <td></td>
-        {{# } }}
+  {{# } }}
         <td>{{ item.studentNum||'' }}</td>
         <td data-sid="{{ item.id }}">
             {{# if(item.status != null){ }}
@@ -117,15 +125,19 @@
             {{# } }}
         </td>
          <td id="option">
+             {{# if(item.status == "DISENABLE"||''){ }}
             <a href="javascript:;"  data-id="{{ item.id }}" data-opt="edit" class="layui-btn layui-btn-mini">编辑</a>
+               {{# }}}
              <a href="javascript:;" data-id="{{ item.id }}" data-status="{{ item.status }}" data-opt="isStart" class="layui-btn layui-btn-warm layui-btn-mini">
              {{# if(item.status == "ENABLE"){ }}
                                      停用                      
             {{# } else {}}
                                      启用
                 {{# }}} </a>
+               {{# if(item.status == "DISENABLE"||''){ }}
             <a href="javascript:;" data-id="{{ item.id }}" data-opt="del" class="layui-btn layui-btn-danger layui-btn-mini">删除</a>
-        </td>
+       {{# }}}
+       </td>
     </tr>
     {{# }); }}
 
@@ -137,6 +149,8 @@ layui.use(['form', 'layedit', 'laydate', 'jquery'], function() {
         layedit = layui.layedit,
         laydate = layui.laydate,
         $ = layui.jquery,
+   
+       
         start = {
     	      istime: true,
     	      format: 'YYYY-MM-DD hh:mm:ss',
@@ -169,12 +183,12 @@ layui.use(['form', 'layedit', 'laydate', 'jquery'], function() {
 		form.on('submit(apply)', function(data) {
 		    var flag =$("#flag").val();
 		    var url;
-		    alert(flag);
+		    //alert(flag);
 		    if(flag=="add"){
                 url="/topictime/add";
 			   }
 		    else{url="/topictime/update-time";}
-			$.post(Bm["path"]+url, data.field, function(ret){
+		    $.post(Bm["path"]+url, data.field, function(ret){
                 if(ret.status == "SUCCESS"){
                     layer.alert("提交成功");
                     setTimeout(function () {
@@ -182,7 +196,7 @@ layui.use(['form', 'layedit', 'laydate', 'jquery'], function() {
                     },2000);
                 }
             });
-			return false;
+			  return false;
 		});
 	});
 </script>

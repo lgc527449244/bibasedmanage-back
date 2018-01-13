@@ -100,16 +100,15 @@
 		 });*/
         $.post(Bm["path"] + "/operation/get-all", {id : "111"}, function(ret){
             if(ret.status == "SUCCESS"){
-               //  alert(JSON.stringify(ret))
+                //alert(JSON.stringify(ret))//改过1
                 for(var i=0;i<ret.result.length;i++){
-                    $("#operationId").append('<input type="checkbox" name="operation'+i+'" value="'+ret.result[i].id+'" title="'+ret.result[i].name+'">')
+                    $("#operationId").append('<input type="checkbox" name="operation'+i+'" value="'+ret.result[i].id+'" title="'+ret.result[i].remark+'">')
 				}
                 form.render();
             }
         });
 //				//监听提交
         form.on('submit(sub)', function(data) {
-            alert(JSON.stringify(data))
             $.post(Bm["path"]+"/role/add", data.field, function(ret){
                 if(ret.status == "SUCCESS"){
                     layer.alert("提交成功");

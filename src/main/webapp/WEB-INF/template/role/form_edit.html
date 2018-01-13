@@ -116,34 +116,30 @@
                 layedit.sync(editIndex);
             }
         });*/
+        //改过1 get-all
         $.post(Bm["path"] + "/operation/get-all", {id : "111"}, function(ret){
             if(ret.status == "SUCCESS"){
                 console.log(JSON.stringify(ret))
-                //  alert(JSON.stringify(ret))
-                for(var i=0;i<ret.result.length;i++){
-                    $("#operationId").append('<input type="checkbox" class="operation" name="operation'+i+'" value="'+ret.result[i].id+'" title="'+ret.result[i].name+'">')
-                }
                 form.render();
-            }
-            aa();
+                for(var i=0;i<ret.result.length;i++){
+                    $("#operationId").append('<input type="checkbox" class="operation" name="operation'+i+'" value="'+ret.result[i].id+'" title="'+ret.result[i].remark+'">')
 
-        });
-        function aa(){
-
-            $.post(Bm["path"] + "/roleOperation/get-all-roleId", {id : "${id}"}, function(ret){
-                if(ret.status == "SUCCESS"){
-                    $(".operation").each(function(){
-                        for(var key in ret.result){
-                            if($(this).val()==ret.result[key].operationId){
-                                $(this).attr("checked","checked");
-                            }
-                        }
-                    })
-                    form.render();
                 }
-            });
-        }
-//				//监听提交
+                $.post(Bm["path"] + "/role-operation/get-all-roleId", {id : "${id}"}, function(ret){
+                    if(ret.status == "SUCCESS"){
+                        $(".operation").each(function(){
+                            for(var key in ret.result){
+                                if($(this).val()==ret.result[key].operationId){
+                                    $(this).attr("checked","checked");
+                                }
+                            }
+                        })
+                        form.render();
+                    }
+                });
+            }
+        });
+ 		//监听提交
         form.on('submit(sub)', function(data) {
             $.post(Bm["path"]+"/role/update", data.field, function(ret){
                 if(ret.status == "SUCCESS"){

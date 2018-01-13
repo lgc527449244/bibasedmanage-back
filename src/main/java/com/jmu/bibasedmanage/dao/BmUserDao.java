@@ -2,6 +2,7 @@ package com.jmu.bibasedmanage.dao;
 
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.jmu.bibasedmanage.pojo.BmUser;
+import com.jmu.bibasedmanage.pojo.BmUserMerge;
 import com.jmu.bibasedmanage.vo.CurrentUser;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
@@ -28,5 +29,6 @@ public interface BmUserDao {
     //根据登录名获取当前用户信息
     CurrentUser selectCurrentByLoginName(@Param("loginName") String loginName);
 
-    List<BmUser> selectByPage(PageBounds pageBounds, Map<String, Object> map);
+    //改过 BmUserMerge为了在页面展示 多了一个roleName
+    List<BmUserMerge> selectByPage(PageBounds pageBounds, Map<String, Object> map);
 }

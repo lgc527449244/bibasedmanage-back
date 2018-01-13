@@ -1,6 +1,7 @@
 package com.jmu.bibasedmanage.service;
 
 import com.jmu.bibasedmanage.pojo.BmUser;
+import com.jmu.bibasedmanage.pojo.BmUserMerge;
 import com.jmu.bibasedmanage.vo.CurrentUser;
 import com.jmu.bibasedmanage.vo.Page;
 
@@ -24,13 +25,8 @@ public interface UserService {
     void update(BmUser bmUser);
 
     void delete(String id);
-    /**
-     * 分页查询
-     * @param map（pageNo:当前页,pageSize：每页条数）
-     * @param page
-     * @return
-     */
-    Page<BmUser> list(Map map, Page<BmUser> page);
 
     BmUser getById(String id);
+
+    Page<BmUserMerge> list(Map map, Page<BmUserMerge> page);
 }
