@@ -16,7 +16,7 @@ function Table(_data){
       
           paging.init({
             openWait: true,
-            url: Bm["path"] + '/teacher/list', //地址
+            url: Bm["path"] + '/teacher/list?tSeacher=1', //地址
             elem: '#content', //内容容器
             params: _data,
             type: 'POST',

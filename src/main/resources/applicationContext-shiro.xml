@@ -39,8 +39,9 @@
                 /logout = logout
                 /login.html = anon
                 /login = anon
-                /user.jsp = perms[student:*]
-                /student/** = roles[admin]
+                /code/get-code = anon
+                <!--/user.jsp = perms[student:*]-->
+                <!--/student/** = roles[admin]-->
                 /** = authc
             </value>
         </property>

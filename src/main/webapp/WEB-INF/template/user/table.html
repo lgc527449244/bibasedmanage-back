@@ -75,7 +75,7 @@
         <td>{{ item.roleName||'' }}</td>
         <td>
             {{# if(item.userStatus != null){ }}
-                {{ item.userStatus == "ENABLE" ? "启用" : "未启用" }}
+                {{ item.userStatus == "NORMAL" ? "启用" : "未启用" }}
             {{# } }}
         </td>
         <td>
@@ -83,7 +83,7 @@
             <a href="javascript:;"  data-id="{{ item.id }}" data-opt="edit" class="layui-btn layui-btn-mini">编辑</a>
             <a href="javascript:;"  data-id="{{ item.id }}" data-opt="del" class="layui-btn layui-btn-danger layui-btn-mini">删除</a>
             {{# if(item.roleName != "管理员"){ }}
-                <a href="javascript:;" data-id="{{ item.id }}" id="{{ item.roleName||'' }}" data-opt="check" class="layui-btn layui-btn-mini">个人信息</a>
+                <a href="javascript:;" data-id="{{ item.tsId }}" id="{{ item.roleName||'' }}" data-opt="check" class="layui-btn layui-btn-mini">个人信息</a>
             {{# } }}
         </td>
     </tr>

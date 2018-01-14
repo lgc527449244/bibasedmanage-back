@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * Created by ljc on 2018/1/3.
@@ -70,5 +71,16 @@ public class IndexController {
     public JsonResponse menu(){
         String roleId = SecurityUtils.getCurrentUser().getRoleId();
         return ResponseUtil.success(indexService.getMenu(roleId));
+    }
+
+    @RequestMapping("personal-info.html")
+    public ModelAndView personalInfo(){
+        CurrentUser user = SecurityUtils.getCurrentUser();
+        if("student".equals(user.getRoleName())){
+            return new ModelAndView("/student/personal_info.html")
+                    .addObject("id", user.getTsId());
+        }
+        return new ModelAndView("/teacher/teacher_info.html")
+                .addObject("id", user.getTsId());
     }
 }

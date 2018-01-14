@@ -95,4 +95,15 @@ public class BmUserController {
         userService.delete(id);
         return ResponseUtil.success();
     }
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping("/student-info")
+    public ModelAndView studentInfo(String id){
+        return new ModelAndView("/student/personal_info.html")
+                .addObject("id",id);
+    }
 }

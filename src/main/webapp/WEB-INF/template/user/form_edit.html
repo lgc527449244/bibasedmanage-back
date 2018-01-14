@@ -54,13 +54,10 @@
 						<option >请选择</option>
 					</select>
 				</div>
-				<div class="layui-input-inline" >
-					<a  href="#"    id ="add" class="layui-btn layui-btn-primary">选择</a>
+				<div class="layui-input-inline"   >
+					<a  href="#" id ="add" class="layui-btn layui-btn-primary">选择</a>
 				</div>
-				<!-- Button trigger modal -->
-				<!--<button type="button" class="btn btn-primary btn-lg">
-					Launch demo modal
-				</button>-->
+
 			</div>
 		</div>
 		<div class="layui-form-item">
@@ -80,6 +77,23 @@
 				<div class="layui-input-inline">
 					<input id="tsId" name="tsId" autocomplete="off" readonly class="layui-input">
 				</div>
+			</div>
+			<div class="layui-inline" style="display: none">
+				<div class="layui-input-inline">
+					<input id="id" name="id" autocomplete="off" readonly class="layui-input">
+				</div>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-inline">
+				<label class="layui-form-label">状态</label>
+				<div class="layui-input-inline">
+					<select name="userStatus" id="userStatus"  lay-filter="sex">
+						<option value="ENABLE"  >启用</option>
+						<option value="UNABLE"  >停用</option>
+					</select>
+				</div>
+
 			</div>
 		</div>
 		<div class="layui-form-item">
@@ -124,11 +138,14 @@
                     if(ret.status == "SUCCESS"){
                         lastTsid=ret.result.tsId;
                         lastRole=ret.result.roleId;
-                        console.log(ret.result.loginName+"=="+lastTsid)
 						$("#loginName").val(ret.result.loginName);
                         $("#id").val(ret.result.id);
                         $("#roleId").children('option').each(function() {
                             if(ret.result.roleId==$(this).val())
+                                $(this).attr("selected","selected");
+                        })
+                        $("#userStatus").children('option').each(function() {
+                            if(ret.result.userStatus==$(this).val())
                                 $(this).attr("selected","selected");
                         })
                         form.render();
@@ -171,12 +188,16 @@
         });
 //监听提交
         form.on('submit(sub)', function(data) {
-
-            if($("#roleId").find("option:selected").text()=="管理员"||(data.field.tsId!=""&&data.field.tsId!=lastTsid))
+			 if(lastTsid!="")
                 data.field.tsId += ","+lastTsid;
-            else  data.field.tsId = lastTsid;
+
             if(data.field.roleId!=lastRole)
                 data.field.roleId +=","+lastRole;
+            if(data.field["loginPassword"]=="")
+                delete data.field["loginPassword"]
+
+		/*	console.log( data.field)
+		 	return false;*/
             $.post(Bm["path"]+"/user/update", data.field, function(ret){
 
                 if(ret.status == "SUCCESS"){

@@ -204,4 +204,11 @@
       record_status = #{recordStatus,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+
+  <select id="selectByTeacherId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select top 1
+    <include refid="Base_Column_List" />
+    from bm_topic
+    where status = "ENABLE" and teacher_id = #{id,jdbcType=VARCHAR}
+  </select>
 </mapper>

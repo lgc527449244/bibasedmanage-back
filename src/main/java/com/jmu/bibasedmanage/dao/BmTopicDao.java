@@ -6,7 +6,9 @@ import java.util.Map;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.jmu.bibasedmanage.pojo.BmTeacher;
 import com.jmu.bibasedmanage.pojo.BmTopic;
+import org.springframework.stereotype.Component;
 
+@Component
 public interface BmTopicDao {
     int deleteByPrimaryKey(String id);
 
@@ -25,4 +27,8 @@ public interface BmTopicDao {
     BmTopic selectById(String id);
     
     List<BmTopic> selectByLikePage(Map map, PageBounds pageBounds);
+
+    //根据老师的id查看当前的启用状态下的课题
+    BmTopic selectByTeacherId(String id);
+
 }

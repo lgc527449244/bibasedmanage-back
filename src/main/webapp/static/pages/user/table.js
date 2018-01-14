@@ -37,28 +37,49 @@ function Table(_data) {
                 //绑定所有删除按钮事件
                 $('#content').children('tr').each(function () {
                     var $that = $(this);
-                    role_id=$(this).data('id');
                     $that.children('td:last-child').children('a[data-opt=del]').on('click', function () {
-                        $.post(Bm["path"]+"/user/delete", {'id':$(this).data('id')}, function(ret){
-                            if(ret.status == "SUCCESS"){
-                                setTimeout(function () {
-                                    $("#"+role_id).remove();
-                                 //   window.location.href = Bm["path"] + "/user/list.html";
-                                    layer.msg("删除成功",{time:1000});
-                                },1000);
-                                //因为这里面的不知道为什么执行不了  所以只能吧页面的删除操作放在外面了,
+                        var role_id=$(this).data('id');
+                        layer.msg('你确定删除么？', {
+                            time: 0 //不自动关闭
+                            ,btn: ['确定', '取消']
+                            ,yes: function(ret){
+                                $.post(Bm["path"]+"/user/delete", {'id':role_id}, function(ret){
+                                    if(ret.status == "SUCCESS"){
+                                        setTimeout(function () {
+                                            layer.msg("删除成功",{time:1000});
+                                            $("#"+role_id).remove();
+
+                                        },1000);
+                                        //因为这里面的不知道为什么执行不了  所以只能吧页面的删除操作放在外面了,
+                                    }
+                                });
+
+                                //关闭弹窗
+                                layer.close(ret);
                             }
                         });
+                    /*    $.post(Bm["path"]+"/user/delete", {'id':$(this).data('id')}, function(ret){
+
+                            if(ret.status == "SUCCESS"){
+                                setTimeout(function () {
+                                    layer.msg("删除成功",{time:1000});
+                                },1000);
+
+                                window.location.href = Bm["path"] + "/user/list.html";
+                                //因为这里面的不知道为什么执行不了  所以只能吧页面的删除操作放在外面了,
+                            }
+                        });*/
                     });
 
                 });
                 //绑定所有查看个人想信息按钮事件
                 $('#content').children('tr').each(function () {
                     var $that = $(this);
+
                     $that.children('td:last-child').children('a[data-opt=check]').on('click', function () {
                         if($(this).attr("id")=="教师")
                                 layer.open({
-                                    title: '查看用户信息',
+                                    title: '查看教师信息',
                                     maxmin: false,
                                     type: 2,
                                     content: Bm["path"] + '/teacher/teacher-info.html?id='+$(this).data('id'),
@@ -70,10 +91,10 @@ function Table(_data) {
                                 });
                         if($(this).attr("id")=="学生")
                             layer.open({
-                                title: '查看用户信息',
+                                title: '查看学生信息',
                                 maxmin: false,
                                 type: 2,
-                                content: Bm["path"] + '/teacher/student-info.html?id='+$(this).data('id'),
+                                content: Bm["path"] + '/user/student-info.html?id='+$(this).data('id'),
                                 btn: ['确定', '关闭'],
                                 yes: function (index) {
                                     layer.close(index);

@@ -262,6 +262,19 @@
       <artifactId>quartz</artifactId>
       <version>1.8.4</version>
     </dependency>
+
+    <!-- jackson start -->
+    <dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-core-asl</artifactId>
+      <version>1.9.12</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-mapper-lgpl</artifactId>
+      <version>1.9.12</version>
+    </dependency>
+    <!-- jackson end -->
   </dependencies>
   <build>
       <plugins>

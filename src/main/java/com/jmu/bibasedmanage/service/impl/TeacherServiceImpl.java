@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import com.jmu.bibasedmanage.consts.CommonConst;
+import com.jmu.bibasedmanage.dao.BmTopicDao;
 import com.jmu.bibasedmanage.excel.ExcelImportContext;
 import com.jmu.bibasedmanage.excel.ExcelImportHandler;
 import com.jmu.bibasedmanage.excel.ExcelImportService;
@@ -46,6 +47,8 @@ public class TeacherServiceImpl implements TeacherService{
 	@Resource
 	private BmTeacherDao bmteacherDao;
 	@Autowired
+	private BmTopicDao bmTopicDao;
+	@Autowired
 	private ExcelImportService excelImportService;
 
 	/**
@@ -68,7 +71,7 @@ public class TeacherServiceImpl implements TeacherService{
 	 }
 	    /**
 		 * 增加对该学生的评价和评分
-		 * @param teacherId,answerEvaluate,answerScore
+		 * @param answerEvaluate,answerScore
 		 * @return
 		 * Created by hhq on 2018-1-2.
 		 */
@@ -90,10 +93,13 @@ public class TeacherServiceImpl implements TeacherService{
 		 return bmTeacher;
 	 }
 	 public void delete(String id){
-		BmTeacher teacher = new BmTeacher();
-		teacher.setId(id);
-		teacher.setRecordStatus(CommonConst.RECORD_STATUS_DELETED);
-	 	bmteacherDao.updateByPrimaryKeySelective(teacher);
+		BmTeacher bmTeacher = new BmTeacher();
+		 bmTeacher.setId(id);
+		 if(bmTopicDao.selectByTeacherId(id)==null){
+			 bmTeacher.setRecordStatus(CommonConst.RECORD_STATUS_DELETED);
+			 bmteacherDao.updateByPrimaryKeySelective(bmTeacher);
+		 }
+
 	 }
 	 public void add(BmTeacher bmTeacher){
 		 bmTeacher.setId(UUIDUtils.generator());

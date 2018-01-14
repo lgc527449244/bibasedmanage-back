@@ -170,6 +170,14 @@ layui.config({
        };
         tab.tabAdd(_data);
     });
+    $("#personalInfo").on('click', function () {
+        var _data = {
+            "title": "个人信息",
+            "icon": "fa-table",
+            "href": "personal-info.html"
+        };
+        tab.tabAdd(_data);
+    });
 });
 
 var isShowLock = false;

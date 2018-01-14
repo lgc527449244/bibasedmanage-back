@@ -99,7 +99,7 @@ public class UserSerivceImpl implements UserService{
             }
             if(lastRole.getName().equals("student")){
                 BmStudent student1 = new BmStudent();
-                student1.setId(tsId1);
+                student1.setId(tsId2);
                 student1.setIsBind(0);
                 bmStudentDao.updateByPrimaryKeySelective(student1);
             }
@@ -124,6 +124,7 @@ public class UserSerivceImpl implements UserService{
             bmUser.setLoginPassword(EncryptUtils.getEncryptPwd(
                     salt, "MD5", bmUser.getLoginPassword()));
         }
+        bmUser.setUserStatus("NORMAL");
         bmUserDao.updateByPrimaryKeySelective(bmUser);
 
     }

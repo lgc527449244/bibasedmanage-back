@@ -279,7 +279,7 @@
       and student_id like concat("%", #{keyword}, "%")
     </if>
     <if test="isBind != null and isBind != ''">
-      AND is_bind !=1
+      AND is_bind !=1 And status="ENABLE"
     </if>
     order by create_time desc
   </select>

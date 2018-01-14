@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-
 <html>
 
 <head>
@@ -7,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>登录</title>
-    #parse("/common/common.html")
+    #parse("/common/include.html")
     <link rel="stylesheet" href="${base}/static/plugins/layui/css/layui.css" media="all" />
     <link rel="stylesheet" href="${base}/static/css/login.css" />
 </head>
@@ -15,7 +13,7 @@
 <body class="beg-login-bg">
 <div class="beg-login-box">
     <header>
-        <h1>后台登录</h1>
+        <h1>毕设选题系统</h1>
     </header>
     <div class="beg-login-main">
         <form action="login" class="layui-form" method="post"><input name="__RequestVerificationToken" type="hidden" value="fkfh8D89BFqTdrE2iiSdG_L781RSRtdWOH411poVUWhxzA5MzI8es07g6KPYQh9Log-xf84pIR2RIAEkOokZL3Ee3UKmX0Jc8bW8jOdhqo81" />
@@ -30,6 +28,13 @@
                     <i class="layui-icon">&#xe642;</i>
                 </label>
                 <input type="password" name="password" lay-verify="required" autocomplete="off" placeholder="这里输入密码" class="layui-input">
+            </div>
+
+            <div class="layui-form-item">
+                <img src="${base}/code/get-code" style="width:40%">
+                <div style="width:55%;float: right">
+                <input type="text" name="code" lay-verify="required" autocomplete="off" placeholder="这里输入验证码" class="layui-input">
+                </div>
             </div>
             <div class="layui-form-item">
                 <!--<div class="beg-pull-left beg-login-remember">-->
@@ -49,6 +54,41 @@
         <!--<p>Beginner © www.zhengjinfan.cn</p>-->
     </footer>
 </div>
+<script type="text/javascript">
+
+    layui.use(['form', 'layedit', 'laydate'], function() {
+        var form = layui.form(),
+            layer = layui.layer,
+            layedit = layui.layedit,
+            laydate = layui.laydate,
+            $ = layui.jquery;
+
+        var msg = "$!{msg}";
+        console.log(msg);
+        if(msg != null && msg != ''){
+            layer.alert(msg);
+        }
+
+        //自定义验证规则
+        form.verify({
+        });
+
+			//监听提交
+//        form.on('submit(login)', function(data) {
+//            $.post(Bm["path"]+"/login", data.field, function(ret){
+//                if(ret.status == "SUCCESS"){
+//                    layer.alert("提交成功");
+//                    setTimeout(function () {
+//                        window.location.href = Bm["path"] + "/index.html";
+//                    },2000);
+//                }else{
+//                    layer.alert(ret.result);
+//                }
+//            });
+//            return false;
+//        });
+    });
+</script>
 </body>
 
 </html>

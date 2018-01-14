@@ -97,7 +97,7 @@
             {{# } }}
         </td>
          <td id="option">
-        {{# if(item.status == "DISENABLE"||''){ }}
+        {{# if(item.status != "ENABLE"){ }}
             <a href="javascript:;"  data-id="{{ item.id }}" data-opt="edit" class="layui-btn layui-btn-mini">编辑</a>
             <a href="javascript:;" data-id="{{ item.id }}" data-opt="del" class="layui-btn layui-btn-danger layui-btn-mini">删除</a>
          {{# }}} 
